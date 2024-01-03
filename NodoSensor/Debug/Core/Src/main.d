@@ -45,11 +45,11 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi.h \
- C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi_conf.h \
- C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/wifi.h \
- C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi.h \
- C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi_io.h \
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h \
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_conf.h \
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/wifi.h \
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h \
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_io.h \
  C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h \
  C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_tsensor.h \
  C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h \
@@ -110,11 +110,11 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi.h:
-C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi_conf.h:
-C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/wifi.h:
-C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi.h:
-C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi_io.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_conf.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/wifi.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_io.h:
 C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h:
 C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_tsensor.h:
 C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h:

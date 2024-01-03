@@ -810,7 +810,7 @@ static int wifi_start(void)
   if(WIFI_Init() ==  WIFI_STATUS_OK)
   {
     printf("ES-WIFI Initialized.\n\r");
-    if(WIFI_GetMAC_Address(MAC_Addr, sizeof(MAC_Addr)) == WIFI_STATUS_OK)
+    if(WIFI_GetMAC_Address(MAC_Addr) == WIFI_STATUS_OK)
     {
       printf("> eS-WiFi module MAC Address : %02X:%02X:%02X:%02X:%02X:%02X\n\r",
                MAC_Addr[0],
@@ -870,7 +870,7 @@ int wifi_connect(void)
 	  printf("Connecting to %s , %s.\n\r",SSID,PASSWORD);
 	  if( WIFI_Connect(SSID, PASSWORD, WIFISECURITY) == WIFI_STATUS_OK)
 	  {
-		if(WIFI_GetIP_Address(IP_Addr, sizeof(IP_Addr)) == WIFI_STATUS_OK)
+		if(WIFI_GetIP_Address(IP_Addr) == WIFI_STATUS_OK)
 		{
 		  printf("> es-wifi module connected: got IP Address : %d.%d.%d.%d.\n\r",
 				   IP_Addr[0],
