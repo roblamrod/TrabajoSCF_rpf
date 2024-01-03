@@ -16,6 +16,7 @@ extern "C" {
 #define TOPIC_COUNT (1)
 #define API_KEY "BBUS-85ec295c5776e53fbf9089679853d03cc61"
 #define DEFAULT_TOKEN "BBUS-l8Ckkld4Q9jR1xf0SQAu1eZRoVczdX" // USERNAME
+#define pcBaseTopic "/v1.6/devices/Monitor_Node" // TEMPERATURA "SistCiberFis_enrique/SCF/Temp"
 #define pcTempTopic "/v1.6/devices/Monitor_Node/temperatura" // TEMPERATURA "SistCiberFis_enrique/SCF/Temp"
 #define pcAccTopic "/v1.6/devices/Monitor_Node/aceleraciones" // ACELERACIONES //"SistCiberFis_antonio/SCF/LED"
 #define pcHumTopic "/v1.6/devices/Monitor_Node/humedad"

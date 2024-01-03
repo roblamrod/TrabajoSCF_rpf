@@ -82,7 +82,7 @@ osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for wifiStart */
 osThreadId_t wifiStartHandle;
@@ -123,6 +123,11 @@ ACCELERO_StatusTypeDef iniAcc;
 char str_x[14] = "";				/* cadena para la aceleraciÃ³n en el eje X */
 char str_y[14] = "";				/* cadena para la aceleraciÃ³n en el eje X */
 char str_z[18] = "";				/* cadena para la aceleraciÃ³n en el eje X */
+
+int16_t acel_x = 0;
+int16_t acel_y = 0;
+int16_t acel_z = 0;
+
 char timestamp[36] = "";			/* cadena para el timestamp */
 
 uint8_t msg1[] = "****** Acceleration values measurement ******\n\n\r";
@@ -217,7 +222,7 @@ int main(void)
   MX_USB_OTG_FS_PCD_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-#if defined (TERMINAL_USE)
+  #if defined (TERMINAL_USE)
   /* Initialize all configured peripherals */
   hDiscoUart.Instance = DISCOVERY_COM1;
   hDiscoUart.Init.BaudRate = 115200;
@@ -242,9 +247,9 @@ int main(void)
   HAL_UART_Transmit(&huart1,msg3,sizeof(msg3),1000);
 
 
-iniAcc = BSP_ACCELERO_Init();									/* InicializaciÃ³n del acelerÃ³metro */
-LSM6DSL_AccInt_Drdy();											/* ConfiguraciÃ³n del acelerÃ³metro*/
-BSP_ACCELERO_LowPower(0);										/* Deshabilitado del modo de bajo consumo*/
+  iniAcc = BSP_ACCELERO_Init();									/* InicializaciÃ³n del acelerÃ³metro */
+  LSM6DSL_AccInt_Drdy();											/* ConfiguraciÃ³n del acelerÃ³metro*/
+  BSP_ACCELERO_LowPower(0);										/* Deshabilitado del modo de bajo consumo*/
 
 
   /* USER CODE END 2 */
@@ -985,20 +990,21 @@ MQTTContext_t xMQTTContext;
 MQTTStatus_t xMQTTStatus;
 TransportStatus_t xNetworkStatus;
 float ftemp;
-char payLoad[16];
+char payLoad[64];
  /* Attempt to connect to the MQTT broker. The socket is returned in
  * the network context structure. */
  xNetworkStatus = prvConnectToServer( &xNetworkContext );
  configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
  //LOG(("Trying to create an MQTT connection\n"));
  prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext );
-for( ; ; )
+ for( ; ; )
  {
- /* Publicar cada 5 segundos */
- osDelay(5000);
- ftemp=BSP_TSENSOR_ReadTemp();
- sprintf(payLoad,"%02.2f",ftemp);
- prvMQTTPublishToTopic(&xMQTTContext,pcTempTopic,payLoad);
+   /* Publicar cada 5 segundos */
+   osDelay(5000);
+   ftemp=BSP_TSENSOR_ReadTemp();
+
+   sprintf(payLoad,"{\"temperatura\":%02.2f, \"acel_x\":%d, \"acel_y\":%d, \"acel_z\":%d}",ftemp, acel_x,acel_y,acel_z);
+   prvMQTTPublishToTopic(&xMQTTContext,pcBaseTopic,payLoad);
 
 
  }
@@ -1025,6 +1031,9 @@ int wifi_connect(void)
 		  return_value=0; //TODO CORRECTO
 		  try=MAX_tries+1;
 		  //osThreadFlagsSet(wifiStartHandle, 0x0001U);
+
+		  // Activa la tarea de aceleracion
+		  osThreadFlagsSet(acel_taskHandle, 0x000002U);
 		}
 		else
 		{
@@ -1103,8 +1112,10 @@ void wifiStartTask(void *argument)
 {
   /* USER CODE BEGIN wifiStartTask */
   /* Infinite loop */
+	wifi_connect();
   for(;;)
   {
+	MQTTTask();
     osDelay(1);
   }
   /* USER CODE END wifiStartTask */
@@ -1121,6 +1132,8 @@ void acel_task_function(void *argument)
 {
   /* USER CODE BEGIN acel_task_function */
     uint32_t ret_flag = 0U;
+  ret_flag = osThreadFlagsWait(0x00000002U, osFlagsWaitAny,osWaitForever);
+  printf("Llamada desde la tarea de wifi.\n\r");
   // Infinite loop //
   for(;;)
   {
@@ -1151,6 +1164,10 @@ void acel_task_function(void *argument)
 
     	HAL_UART_Transmit(&huart1,(uint8_t *)timestamp,26,1000);		/* TransmisiÃ³n de la informaciÃ³n por UART */
 
+    	// Se guarda en las variables globales para mandarlo desde la funcion de MQTT
+    	acel_x = pDataAcc[0];
+    	acel_y = pDataAcc[1];
+    	acel_z = pDataAcc[2];
 
 
     	if (pDataAcc[0]>=0 && pDataAcc[0]<10){							/* Eje X */
