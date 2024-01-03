@@ -33,6 +33,7 @@
 #include <math.h>
 #include <string.h>
 #include "mqtt_priv.h"
+#include "stm32l475e_iot01_accelero.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -106,6 +107,27 @@ int _write(int file, char *ptr, int len){
 	return len;
 }
 
+
+
+int16_t pDataAcc[3];
+ACCELERO_StatusTypeDef iniAcc;
+char str_x[14] = "";				/* cadena para la aceleraciÃ³n en el eje X */
+char str_y[14] = "";				/* cadena para la aceleraciÃ³n en el eje X */
+char str_z[18] = "";				/* cadena para la aceleraciÃ³n en el eje X */
+char timestamp[36] = "";			/* cadena para el timestamp */
+
+uint8_t msg1[] = "****** Acceleration values measurement ******\n\n\r";
+uint8_t msg2[] = "=====> Initialize Acceleration sensor LSM6DSL \r\n";
+uint8_t msg3[] = "=====> Acceleration sensor LSM6DSL initialized \r\n ";
+
+uint16_t subsec = 0;		/* variable para los ms */
+RTC_TimeTypeDef varTime; /* estructura para recibir la hora del RTC */
+RTC_DateTypeDef varDate; /* estructura para recibir la fecha */
+
+uint8_t drdyPulsedCfg = 0;
+uint8_t ctrlDrdy = 0;
+uint8_t ctrlMaster = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,9 +146,11 @@ void MQTTTask(void);
 
 /* USER CODE BEGIN PFP */
 
-
-
 static uint8_t IP_Addr[4];
+void LSM6DSL_AccInt_Drdy(void);							/* FunciÃ³n para la activaciÃ³n de la interrupciÃ³n Data Ready */
+void  HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
+
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -198,11 +222,19 @@ int main(void)
 
   BSP_COM_Init(COM1, &hDiscoUart);
 
-#endif /* TERMINAL_USE */
+  #endif /* TERMINAL_USE */
+  BSP_TSENSOR_Init();
+  printf("****** Sistemas Ciberfisicos ****** \n\r");
 
-BSP_TSENSOR_Init();
+  HAL_UART_Transmit(&huart1,msg1,sizeof(msg1),1000); 			/* TransmisiÃ³n de mensajes por UART */
+  HAL_UART_Transmit(&huart1,msg2,sizeof(msg2),1000);
+  HAL_UART_Transmit(&huart1,msg3,sizeof(msg3),1000);
 
-printf("****** Sistemas Ciberfisicos ****** \n\r");
+
+iniAcc = BSP_ACCELERO_Init();									/* InicializaciÃ³n del acelerÃ³metro */
+LSM6DSL_AccInt_Drdy();											/* ConfiguraciÃ³n del acelerÃ³metro*/
+BSP_ACCELERO_LowPower(0);										/* Deshabilitado del modo de bajo consumo*/
+
 
   /* USER CODE END 2 */
 
@@ -774,6 +806,37 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void LSM6DSL_AccInt_Drdy()						/* InicializaciÃ³n del acelerÃ³metro */
+	{
+
+		uint8_t ctrl = 0x00;
+		uint8_t tmp;
+		/* Read DRDY_PULSE_CFG_G value  (LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW, LSM6DSL_ACC_GYRO_CTRL1_XL);*/
+		drdyPulsedCfg = SENSOR_IO_Read(LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW, LSM6DSL_ACC_GYRO_DRDY_PULSE_CFG_G);     /*Buscar en archivo lsm6dsl.h*/
+
+		/* Set Drdy interruption to INT1  */
+		drdyPulsedCfg |= 0b10000000;
+
+		/* write back control register */
+		SENSOR_IO_Write(LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW, LSM6DSL_ACC_GYRO_DRDY_PULSE_CFG_G, drdyPulsedCfg);
+
+		/* Read INT1_CTRL value */
+		ctrlDrdy = SENSOR_IO_Read(LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW, LSM6DSL_ACC_GYRO_INT1_CTRL);
+
+		/* Set Drdy interruption to INT1  */
+	    ctrlDrdy |= 0b00000011;
+
+		/* write back control register */
+		SENSOR_IO_Write(LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW, LSM6DSL_ACC_GYRO_INT1_CTRL, ctrlDrdy);
+
+		/* Read MASTER_CONFIG value */
+		ctrlMaster = SENSOR_IO_Read(LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW, LSM6DSL_ACC_GYRO_MASTER_CONFIG);
+
+		ctrlMaster |= 0b00000011;
+
+		/* write back control register */
+		SENSOR_IO_Write(LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW, LSM6DSL_ACC_GYRO_MASTER_CONFIG, ctrlMaster);
+	}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -856,6 +919,8 @@ for( ; ; )
  ftemp=BSP_TSENSOR_ReadTemp();
  sprintf(payLoad,"%02.2f",ftemp);
  prvMQTTPublishToTopic(&xMQTTContext,pcTempTopic,payLoad);
+
+
  }
 }
 

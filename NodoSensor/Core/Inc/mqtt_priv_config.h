@@ -16,8 +16,11 @@ extern "C" {
 #define TOPIC_COUNT (1)
 #define API_KEY "BBUS-85ec295c5776e53fbf9089679853d03cc61"
 #define DEFAULT_TOKEN "BBUS-l8Ckkld4Q9jR1xf0SQAu1eZRoVczdX" // USERNAME
-#define pcTempTopic "/v1.6/devices/demo-machine/temperatura-1" // TEMPERATURA "SistCiberFis_enrique/SCF/Temp"
-#define pcTempTopic2 "/v1.6/devices/demo-machine/aceleraciones" // ACELERACIONES //"SistCiberFis_antonio/SCF/LED"
+#define pcTempTopic "/v1.6/devices/Monitor_Node/temperatura" // TEMPERATURA "SistCiberFis_enrique/SCF/Temp"
+#define pcAccTopic "/v1.6/devices/Monitor_Node/aceleraciones" // ACELERACIONES //"SistCiberFis_antonio/SCF/LED"
+#define pcHumTopic "/v1.6/devices/Monitor_Node/humedad"
+#define pcModOpTopic "/v1.6/devices/Monitor_Node/modo_operacion"
+#define pcEstadoTopic "/v1.6/devices/Monitor_Node/estado"
 
 // Define strings for these parameters or set them to NULL. Do not use empty string ("")
 #define mqttUserName DEFAULT_TOKEN //NULL
