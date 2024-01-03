@@ -16,6 +16,7 @@ RM := rm -rf
 -include Libraries/coreMQTT/source/interface/subdir.mk
 -include Libraries/coreMQTT/source/subdir.mk
 -include Libraries/WIFI/subdir.mk
+-include L4_IOT_Sensors/Drivers/BSP/Components/lsm6dsl/subdir.mk
 -include L4_IOT_Sensors/Drivers/BSP/Components/hts221/subdir.mk
 -include L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/subdir.mk
 -include Drivers/STM32L4xx_HAL_Driver/Src/subdir.mk

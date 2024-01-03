@@ -68,6 +68,8 @@ I2C_HandleTypeDef hi2c2;
 
 QSPI_HandleTypeDef hqspi;
 
+RTC_HandleTypeDef hrtc;
+
 SPI_HandleTypeDef hspi3;
 
 UART_HandleTypeDef huart1;
@@ -87,6 +89,13 @@ osThreadId_t wifiStartHandle;
 const osThreadAttr_t wifiStart_attributes = {
   .name = "wifiStart",
   .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for acel_task */
+osThreadId_t acel_taskHandle;
+const osThreadAttr_t acel_task_attributes = {
+  .name = "acel_task",
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
@@ -140,9 +149,10 @@ static void MX_SPI3_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
+static void MX_RTC_Init(void);
 void StartDefaultTask(void *argument);
 void wifiStartTask(void *argument);
-void MQTTTask(void);
+void acel_task_function(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -205,6 +215,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 #if defined (TERMINAL_USE)
   /* Initialize all configured peripherals */
@@ -264,6 +275,9 @@ BSP_ACCELERO_LowPower(0);										/* Deshabilitado del modo de bajo consumo*/
   /* creation of wifiStart */
   wifiStartHandle = osThreadNew(wifiStartTask, NULL, &wifiStart_attributes);
 
+  /* creation of acel_task */
+  acel_taskHandle = osThreadNew(acel_task_function, NULL, &acel_task_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -311,8 +325,10 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE|RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_LSE
+                              |RCC_OSCILLATORTYPE_MSI;
   RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
@@ -463,6 +479,70 @@ static void MX_QUADSPI_Init(void)
   /* USER CODE BEGIN QUADSPI_Init 2 */
 
   /* USER CODE END QUADSPI_Init 2 */
+
+}
+
+/**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  RTC_TimeTypeDef sTime = {0};
+  RTC_DateTypeDef sDate = {0};
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /* USER CODE BEGIN Check_RTC_BKUP */
+
+  /* USER CODE END Check_RTC_BKUP */
+
+  /** Initialize RTC and set the Time and Date
+  */
+  sTime.Hours = 0x12;
+  sTime.Minutes = 0x49;
+  sTime.Seconds = 0x50;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sDate.WeekDay = RTC_WEEKDAY_WEDNESDAY;
+  sDate.Month = RTC_MONTH_JANUARY;
+  sDate.Date = 0x3;
+  sDate.Year = 0x24;
+
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
 
 }
 
@@ -979,6 +1059,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
       SPI_WIFI_ISR();
       break;
     }
+    case (GPIO_PIN_11):
+      osThreadFlagsSet(acel_taskHandle, 0x000001U);
+      break;
     default:
     {
       break;
@@ -1018,13 +1101,141 @@ void SPI3_IRQHandler(void)
 /* USER CODE END Header_wifiStartTask */
 void wifiStartTask(void *argument)
 {
-	wifi_connect();
-	for(;;)
-	{
-		MQTTTask();
-		osDelay(1);
-	}
+  /* USER CODE BEGIN wifiStartTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
   /* USER CODE END wifiStartTask */
+}
+
+/* USER CODE BEGIN Header_acel_task_function */
+/**
+* @brief Function implementing the acel_task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_acel_task_function */
+void acel_task_function(void *argument)
+{
+  /* USER CODE BEGIN acel_task_function */
+    uint32_t ret_flag = 0U;
+  // Infinite loop //
+  for(;;)
+  {
+      ret_flag = osThreadFlagsWait(0x00000001U, osFlagsWaitAny,osWaitForever);
+      if (ret_flag == 1U){
+        BSP_ACCELERO_AccGetXYZ(pDataAcc);                            // Toma de Aceleración /
+        HAL_RTC_GetTime(&hrtc, &varTime, RTC_FORMAT_BIN);            // Toma de timestamp /
+        subsec = (varTime.SecondFraction-varTime.SubSeconds)*1000/varTime.SecondFraction;      /* ms del timestamp */
+        HAL_RTC_GetDate(&hrtc, &varDate, RTC_FORMAT_BCD);            // Toma de fecha /
+
+        snprintf(str_x,14,"Eje_X = %d, ",pDataAcc[0]);                /* Formateo del mensaje de aceleración del eje X */
+        snprintf(str_y,14,"Eje_Y = %d, ",pDataAcc[1]);
+        snprintf(str_z,18,"Eje_Z = %d, \r\n",pDataAcc[2]);
+
+
+        if (subsec <10){
+            snprintf(timestamp,27,"\r\nTimestamp = %d:%d:%d.00%d - ",varTime.Hours, varTime.Minutes, varTime.Seconds,subsec);
+
+        }
+        else if (10<=subsec && subsec <100) {
+            snprintf(timestamp,28,"\r\nTimestamp = %d:%d:%d.0%d - ",varTime.Hours, varTime.Minutes, varTime.Seconds,subsec);
+
+        }
+        else{
+            snprintf(timestamp,28,"\r\nTimestamp = %d:%d:%d.%d - ",varTime.Hours, varTime.Minutes, varTime.Seconds,subsec);
+        }
+
+
+    	HAL_UART_Transmit(&huart1,(uint8_t *)timestamp,26,1000);		/* TransmisiÃ³n de la informaciÃ³n por UART */
+
+
+
+    	if (pDataAcc[0]>=0 && pDataAcc[0]<10){							/* Eje X */
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,10,1000);
+    	}
+    	else if (pDataAcc[0]>=10 && pDataAcc[0]<100){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,11,1000);
+    	}
+    	else if (pDataAcc[0]>=100 && pDataAcc[0]<1000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,12,1000);
+    	}
+    	else if (pDataAcc[0]>=1000 && pDataAcc[0]<10000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,13,1000);
+    	}
+    	else if (pDataAcc[0]<0 && pDataAcc[0]>-10){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,11,1000);
+    	}
+    	else if (pDataAcc[0]<=-10 && pDataAcc[0]>-100){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,12,1000);
+    	}
+    	else if (pDataAcc[0]<=-100 && pDataAcc[0]>-1000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,13,1000);
+    	}
+    	else if (pDataAcc[0]<=-1000 && pDataAcc[0]>-10000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,14,1000);
+    	}
+
+
+    	if (pDataAcc[1]>=0 && pDataAcc[1]<10){						/* Eje Y */
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,10,1000);
+    	}
+    	else if (pDataAcc[1]>=10 && pDataAcc[1]<100){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,11,1000);
+    	}
+    	else if (pDataAcc[1]>=100 && pDataAcc[1]<1000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,12,1000);
+    	}
+    	else if (pDataAcc[1]>=1000 && pDataAcc[1]<10000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,13,1000);
+    	}
+    	else if (pDataAcc[1]<0 && pDataAcc[1]>-10){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,11,1000);
+    	}
+    	else if (pDataAcc[1]<=-10 && pDataAcc[1]>-100){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,12,1000);
+    	}
+    	else if (pDataAcc[1]<=-100 && pDataAcc[1]>-1000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,13,1000);
+    	}
+    	else if (pDataAcc[1]<=-1000 && pDataAcc[1]>-10000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,14,1000);
+    	}
+
+    	if (pDataAcc[2]>=0 && pDataAcc[2]<10){						/* Eje Z */
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,10,1000);
+    	}
+    	else if (pDataAcc[2]>=10 && pDataAcc[2]<100){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,11,1000);
+    	}
+    	else if (pDataAcc[2]>=100 && pDataAcc[2]<1000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,12,1000);
+    	}
+    	else if (pDataAcc[2]>=1000 && pDataAcc[2]<10000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,13,1000);
+    	}
+    	else if (pDataAcc[2]<0 && pDataAcc[2]>-10){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,11,1000);
+    	}
+    	else if (pDataAcc[2]<=-10 && pDataAcc[2]>-100){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,12,1000);
+    	}
+    	else if (pDataAcc[2]<=-100 && pDataAcc[2]>-1000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,13,1000);
+    	}
+    	else if (pDataAcc[2]<=-1000 && pDataAcc[2]>-10000){
+    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,14,1000);
+    	}
+
+    	else
+    		__NOP();
+    	}
+
+    osDelay(1);
+  }
+  /* USER CODE END acel_task_function */
 }
 
 /**

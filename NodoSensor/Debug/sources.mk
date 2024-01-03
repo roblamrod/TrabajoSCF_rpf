@@ -27,6 +27,7 @@ Core/Startup \
 Drivers/STM32L4xx_HAL_Driver/Src \
 L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01 \
 L4_IOT_Sensors/Drivers/BSP/Components/hts221 \
+L4_IOT_Sensors/Drivers/BSP/Components/lsm6dsl \
 Libraries/WIFI \
 Libraries/coreMQTT/source \
 Libraries/coreMQTT/source/interface \
