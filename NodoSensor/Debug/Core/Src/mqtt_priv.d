@@ -50,13 +50,13 @@ Core/Src/mqtt_priv.o: ../Core/Src/mqtt_priv.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/Libraries/coreMQTT/source/include/core_mqtt.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/Libraries/coreMQTT/source/include/core_mqtt_serializer.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/Libraries/coreMQTT/source/include/core_mqtt_config.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/Libraries/coreMQTT/source/include/core_mqtt_config.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/Libraries/coreMQTT/source/include/../interface/transport_interface.h \
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt.h \
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_serializer.h \
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h \
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h \
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/../interface/transport_interface.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/../../../Core/Inc/mqtt_priv_config.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h
+ C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h
 ../Drivers/STM32L4xx_HAL_Driver/Inc/../../../Core/Inc/mqtt_priv.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
@@ -108,10 +108,10 @@ C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/Libraries/coreMQTT/source/include/core_mqtt.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/Libraries/coreMQTT/source/include/core_mqtt_serializer.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/Libraries/coreMQTT/source/include/core_mqtt_config.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/Libraries/coreMQTT/source/include/core_mqtt_config.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/Libraries/coreMQTT/source/include/../interface/transport_interface.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_serializer.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/../interface/transport_interface.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/../../../Core/Inc/mqtt_priv_config.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h:
+C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h:

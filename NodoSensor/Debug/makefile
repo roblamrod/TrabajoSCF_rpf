@@ -43,34 +43,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := Trabajo_SCF_rpf
+BUILD_ARTIFACT_NAME := TrabajoSCF_sensor
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-Trabajo_SCF_rpf.elf \
+TrabajoSCF_sensor.elf \
 
 MAP_FILES += \
-Trabajo_SCF_rpf.map \
+TrabajoSCF_sensor.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-Trabajo_SCF_rpf.list \
+TrabajoSCF_sensor.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: Trabajo_SCF_rpf.elf secondary-outputs
+main-build: TrabajoSCF_sensor.elf secondary-outputs
 
 # Tool invocations
-Trabajo_SCF_rpf.elf Trabajo_SCF_rpf.map: $(OBJS) $(USER_OBJS) C:\Users\rober\STM32CubeIDE\workspace_1.13.2\Trabajo_SCF_rpf\STM32L475VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Trabajo_SCF_rpf.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\rober\STM32CubeIDE\workspace_1.13.2\Trabajo_SCF_rpf\STM32L475VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Trabajo_SCF_rpf.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+TrabajoSCF_sensor.elf TrabajoSCF_sensor.map: $(OBJS) $(USER_OBJS) C:\Users\rober\STM32CubeIDE\workspace_1.13.2\Trabajo_SCF_rpf\NodoSensor\STM32L475VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "TrabajoSCF_sensor.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\rober\STM32CubeIDE\workspace_1.13.2\Trabajo_SCF_rpf\NodoSensor\STM32L475VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TrabajoSCF_sensor.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -79,14 +79,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Trabajo_SCF_rpf.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Trabajo_SCF_rpf.list"
+TrabajoSCF_sensor.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "TrabajoSCF_sensor.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) Trabajo_SCF_rpf.elf Trabajo_SCF_rpf.list Trabajo_SCF_rpf.map default.size.stdout
+	-$(RM) TrabajoSCF_sensor.elf TrabajoSCF_sensor.list TrabajoSCF_sensor.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

@@ -1,7 +1,6 @@
 Libraries/WIFI/es_wifi_io.o: ../Libraries/WIFI/es_wifi_io.c \
- C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi.h \
- C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi_conf.h \
- C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi_io.h \
+ ../Libraries/WIFI/es_wifi.h ../Libraries/WIFI/es_wifi_conf.h \
+ ../Libraries/WIFI/es_wifi_io.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
@@ -36,11 +35,10 @@ Libraries/WIFI/es_wifi_io.o: ../Libraries/WIFI/es_wifi_io.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi_conf.h
-C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi.h:
-C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi_conf.h:
-C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi_io.h:
+ ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
+../Libraries/WIFI/es_wifi.h:
+../Libraries/WIFI/es_wifi_conf.h:
+../Libraries/WIFI/es_wifi_io.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h:
@@ -76,4 +74,3 @@ C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-C:/Users/rober/STM32Cube/Repository/STM32Cube_FW_L4_V1.18.0/Projects/B-L475E-IOT01A/Applications/WiFi/Common/Inc/es_wifi_conf.h:
