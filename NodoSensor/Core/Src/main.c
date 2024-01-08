@@ -30,6 +30,7 @@
 #include "stm32l4xx_hal_uart.h"
 #include "stm32l475e_iot01.h"
 #include "stm32l475e_iot01_tsensor.h"
+#include "stm32l475e_iot01_hsensor.h"
 #include <math.h>
 #include <string.h>
 #include "mqtt_priv.h"
@@ -239,7 +240,8 @@ int main(void)
   BSP_COM_Init(COM1, &hDiscoUart);
 
   #endif /* TERMINAL_USE */
-  BSP_TSENSOR_Init();
+  BSP_TSENSOR_Init(); // Inicializamos temperatura
+  BSP_HSENSOR_Init(); // Inicializamos humedad
   printf("****** Sistemas Ciberfisicos ****** \n\r");
 
   HAL_UART_Transmit(&huart1,msg1,sizeof(msg1),1000); 			/* TransmisiÃ³n de mensajes por UART */
@@ -990,6 +992,7 @@ MQTTContext_t xMQTTContext;
 MQTTStatus_t xMQTTStatus;
 TransportStatus_t xNetworkStatus;
 float ftemp;
+float fhum;
 char payLoad[64];
  /* Attempt to connect to the MQTT broker. The socket is returned in
  * the network context structure. */
@@ -1002,8 +1005,9 @@ char payLoad[64];
    /* Publicar cada 5 segundos */
    osDelay(5000);
    ftemp=BSP_TSENSOR_ReadTemp();
+   fhum=BSP_HSENSOR_ReadHumidity();
 
-   sprintf(payLoad,"{\"temperatura\":%02.2f, \"acel_x\":%d, \"acel_y\":%d, \"acel_z\":%d}",ftemp, acel_x,acel_y,acel_z);
+   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f, \"acel_x\":%d, \"acel_y\":%d, \"acel_z\":%d}",ftemp, fhum, acel_x,acel_y,acel_z);
    prvMQTTPublishToTopic(&xMQTTContext,pcBaseTopic,payLoad);
 
 

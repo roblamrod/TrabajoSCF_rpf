@@ -47,28 +47,29 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_conf.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/wifi.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_io.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_tsensor.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/hts221.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/../Common/hsensor.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/../Common/tsensor.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_conf.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/WIFI/wifi.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_io.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_tsensor.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/hts221.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/../Common/hsensor.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/../Common/tsensor.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_hsensor.h \
  ../Core/Inc/mqtt_priv.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_serializer.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/../interface/transport_interface.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_serializer.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/../interface/transport_interface.h \
  ../Core/Inc/mqtt_priv_config.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/lsm6dsl.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/accelero.h \
- C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/gyro.h
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/lsm6dsl.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/accelero.h \
+ C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/gyro.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -118,25 +119,26 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_conf.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/wifi.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_io.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_tsensor.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/hts221.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/../Common/hsensor.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/../Common/tsensor.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_conf.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/WIFI/wifi.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/WIFI/es_wifi.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/WIFI/es_wifi_io.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_tsensor.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/hts221.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/../Common/hsensor.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/hts221/../Common/tsensor.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_hsensor.h:
 ../Core/Inc/mqtt_priv.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_serializer.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/../interface/transport_interface.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_serializer.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/core_mqtt_config.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/Libraries/coreMQTT/source/include/../interface/transport_interface.h:
 ../Core/Inc/mqtt_priv_config.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/lsm6dsl.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/accelero.h:
-C:/Users/rober/STM32CubeIDE/workspace_1.13.2/Trabajo_SCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/gyro.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/lsm6dsl.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/accelero.h:
+C:/Users/pablo/STM32CubeIDE/workspace_1.13.2/TrabajoSCF_rpf/NodoSensor/L4_IOT_Sensors/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/gyro.h:
