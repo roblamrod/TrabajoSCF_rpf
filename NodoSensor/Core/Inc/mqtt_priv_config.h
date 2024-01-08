@@ -14,8 +14,10 @@ extern "C" {
 #define MQTT_BROKER_PORT (1883)
 #define MQTTCLIENT_IDENTIFIER "BRIyOA0hGBcPJBchBiU6Bjc"
 #define TOPIC_COUNT (1)
-#define API_KEY "BBUS-85ec295c5776e53fbf9089679853d03cc61"
-#define DEFAULT_TOKEN "BBUS-l8Ckkld4Q9jR1xf0SQAu1eZRoVczdX" // USERNAME
+//#define API_KEY "BBUS-85ec295c5776e53fbf9089679853d03cc61"
+#define API_KEY "BBUS-a3d04547b22f02995aa51ecc74d6f8742ce" //fer
+//#define DEFAULT_TOKEN "BBUS-l8Ckkld4Q9jR1xf0SQAu1eZRoVczdX" // USERNAME
+#define DEFAULT_TOKEN "BBUS-bKuXeaWrsoaSJqVJAYaBHYnCPjkTlQ" //fer
 #define pcBaseTopic "/v1.6/devices/Monitor_Node" // TEMPERATURA "SistCiberFis_enrique/SCF/Temp"
 #define pcTempTopic "/v1.6/devices/Monitor_Node/temperatura" // TEMPERATURA "SistCiberFis_enrique/SCF/Temp"
 #define pcAccTopic "/v1.6/devices/Monitor_Node/aceleraciones" // ACELERACIONES //"SistCiberFis_antonio/SCF/LED"
