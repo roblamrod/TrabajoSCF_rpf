@@ -931,32 +931,6 @@ void LSM6DSL_AccInt_Drdy()						/* InicializaciÃ³n del acelerÃ³metro */
 		/* write back control register */
 		SENSOR_IO_Write(LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW, LSM6DSL_ACC_GYRO_MASTER_CONFIG, ctrlMaster);
 	}
-/* USER CODE END 4 */
-
-/* USER CODE BEGIN Header_StartDefaultTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
-{
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */
-}
-
-/* USER CODE BEGIN Header_wifiStartTask */
-/**
-* @brief Function implementing the wifiStart thread.
-* @param argument: Not used
-* @retval None
-*/
 
 static int wifi_start(void)
 {
@@ -988,45 +962,6 @@ static int wifi_start(void)
     return -1;
   }
   return 0;
-}
-
-
-void MQTTTask(void)
-{
-const uint32_t ulMaxPublishCount = 5UL;
-NetworkContext_t xNetworkContext = { 0 };
-MQTTContext_t xMQTTContext;
-MQTTStatus_t xMQTTStatus;
-TransportStatus_t xNetworkStatus;
-float ftemp;
-float fhum;
-char payLoad[64];
- /* Attempt to connect to the MQTT broker. The socket is returned in
- * the network context structure. */
- xNetworkStatus = prvConnectToServer( &xNetworkContext );
- configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
- //LOG(("Trying to create an MQTT connection\n"));
- prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext );
- for( ; ; )
- {
-   /* Publicar cada 5 segundos */
-   osDelay(5000);
-   ftemp=BSP_TSENSOR_ReadTemp();
-   fhum=BSP_HSENSOR_ReadHumidity();
-
-   // Media de las aceleraciones
-
-   if (acel_flag==1){
-	   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f, \"acel_x\":%d, \"acel_y\":%d, \"acel_z\":%d}",ftemp, fhum, acel_x,acel_y,acel_z);
-   }
-   else{
-	   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f}",ftemp, fhum);
-   }
-
-   prvMQTTPublishToTopic(&xMQTTContext,pcBaseTopic,payLoad);
-
-
- }
 }
 
 int wifi_connect(void)
@@ -1098,6 +1033,79 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 }
 
 
+/* USER CODE END 4 */
+
+/* USER CODE BEGIN Header_StartDefaultTask */
+/**
+  * @brief  Function implementing the defaultTask thread.
+  * @param  argument: Not used
+  * @retval None
+  */
+/* USER CODE END Header_StartDefaultTask */
+void StartDefaultTask(void *argument)
+{
+  /* USER CODE BEGIN 5 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_wifiStartTask */
+/**
+* @brief Function implementing the wifiStart thread.
+* @param argument: Not used
+* @retval None
+*/
+
+
+void MQTTTask(void)
+{
+const uint32_t ulMaxPublishCount = 5UL;
+NetworkContext_t xNetworkContext = { 0 };
+MQTTContext_t xMQTTContext;
+MQTTStatus_t xMQTTStatus;
+TransportStatus_t xNetworkStatus;
+float ftemp;
+float fhum;
+char payLoad[64];
+ /* Attempt to connect to the MQTT broker. The socket is returned in
+ * the network context structure. */
+ xNetworkStatus = prvConnectToServer( &xNetworkContext );
+ configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
+ //LOG(("Trying to create an MQTT connection\n"));
+ prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext );
+
+ // subscribirse a un topic
+ LOG(("Trying to subscribe to topic\n"));
+ prvMQTTSubscribeToTopic(&xMQTTContext,pcEstadoTopic);
+ for( ; ; )
+ {
+   /* Publicar cada 5 segundos */
+   osDelay(5000);
+   ftemp=BSP_TSENSOR_ReadTemp();
+   fhum=BSP_HSENSOR_ReadHumidity();
+
+   // Media de las aceleraciones
+
+   if (acel_flag==1){
+	   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f, \"acel_x\":%d, \"acel_y\":%d, \"acel_z\":%d}",ftemp, fhum, acel_x,acel_y,acel_z);
+   }
+   else{
+	   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f}",ftemp, fhum);
+   }
+
+   prvMQTTPublishToTopic(&xMQTTContext,pcBaseTopic,payLoad);
+
+   MQTT_ProcessLoop(&xMQTTContext);
+
+ }
+}
+
+
+
 
 
 #if defined (TERMINAL_USE)
@@ -1153,7 +1161,7 @@ void acel_task_function(void *argument)
     uint32_t ret_flag = 0U;
   ret_flag = osThreadFlagsWait(0x00000002U, osFlagsWaitAny,osWaitForever);
   printf("Llamada desde la tarea de wifi.\n\r");
-  contador = 0;
+  uint8_t contador = 0;
   int16_t temp_acel_x = 0;
   int16_t temp_acel_y = 0;
   int16_t temp_acel_z = 0;

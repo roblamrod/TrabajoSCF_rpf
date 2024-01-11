@@ -19,11 +19,11 @@ typedef struct topicFilterContext
     const char * pcTopicFilter;
     MQTTSubAckStatus_t xSubAckStatus;
 } topicFilterContext_t;
-
 static topicFilterContext_t xTopicFilterContext[ TOPIC_COUNT ] =
 {
     { pcTempTopic, MQTTSubAckFailure }
 };
+
 static uint16_t usSubscribePacketIdentifier;
 /**
  * @brief Global entry time into the application to use as a reference timestamp
