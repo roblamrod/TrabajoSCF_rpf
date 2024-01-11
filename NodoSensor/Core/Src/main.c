@@ -118,9 +118,13 @@ int _write(int file, char *ptr, int len){
 	return len;
 }
 
-
+uint8_t modo_op;
 
 int16_t pDataAcc[3];
+int16_t lista_acelx[10]; //Lista para guardar los valores de las aceleraciones para luego hacerles la media.
+int16_t lista_acely[10];
+int16_t lista_acelz[10];
+
 ACCELERO_StatusTypeDef iniAcc;
 char str_x[14] = "";				/* cadena para la aceleraciÃ³n en el eje X */
 char str_y[14] = "";				/* cadena para la aceleraciÃ³n en el eje X */
@@ -129,6 +133,8 @@ char str_z[18] = "";				/* cadena para la aceleraciÃ³n en el eje X */
 int16_t acel_x = 0;
 int16_t acel_y = 0;
 int16_t acel_z = 0;
+
+uint8_t acel_flag=0;
 
 char timestamp[36] = "";			/* cadena para el timestamp */
 
@@ -1008,7 +1014,15 @@ char payLoad[64];
    ftemp=BSP_TSENSOR_ReadTemp();
    fhum=BSP_HSENSOR_ReadHumidity();
 
-   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f, \"acel_x\":%d, \"acel_y\":%d, \"acel_z\":%d}",ftemp, fhum, acel_x,acel_y,acel_z);
+   // Media de las aceleraciones
+
+   if (acel_flag==1){
+	   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f, \"acel_x\":%d, \"acel_y\":%d, \"acel_z\":%d}",ftemp, fhum, acel_x,acel_y,acel_z);
+   }
+   else{
+	   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f}",ftemp, fhum);
+   }
+
    prvMQTTPublishToTopic(&xMQTTContext,pcBaseTopic,payLoad);
 
 
@@ -1033,7 +1047,7 @@ int wifi_connect(void)
 				   IP_Addr[1],
 				   IP_Addr[2],
 				   IP_Addr[3]);
-		  return_value=0; //TODO CORRECTO
+		  return_value=0; // CORRECTO
 		  try=MAX_tries+1;
 		  //osThreadFlagsSet(wifiStartHandle, 0x0001U);
 
@@ -1139,6 +1153,10 @@ void acel_task_function(void *argument)
     uint32_t ret_flag = 0U;
   ret_flag = osThreadFlagsWait(0x00000002U, osFlagsWaitAny,osWaitForever);
   printf("Llamada desde la tarea de wifi.\n\r");
+  contador = 0;
+  int16_t temp_acel_x = 0;
+  int16_t temp_acel_y = 0;
+  int16_t temp_acel_z = 0;
   // Infinite loop //
   for(;;)
   {
@@ -1152,7 +1170,6 @@ void acel_task_function(void *argument)
         snprintf(str_x,14,"Eje_X = %d, ",pDataAcc[0]);                /* Formateo del mensaje de aceleración del eje X */
         snprintf(str_y,14,"Eje_Y = %d, ",pDataAcc[1]);
         snprintf(str_z,18,"Eje_Z = %d, \r\n",pDataAcc[2]);
-
 
         if (subsec <10){
             snprintf(timestamp,27,"\r\nTimestamp = %d:%d:%d.00%d - ",varTime.Hours, varTime.Minutes, varTime.Seconds,subsec);
@@ -1169,10 +1186,27 @@ void acel_task_function(void *argument)
 
     	HAL_UART_Transmit(&huart1,(uint8_t *)timestamp,26,1000);		/* TransmisiÃ³n de la informaciÃ³n por UART */
 
-    	// Se guarda en las variables globales para mandarlo desde la funcion de MQTT
-    	acel_x = pDataAcc[0];
-    	acel_y = pDataAcc[1];
-    	acel_z = pDataAcc[2];
+
+        lista_acelx[contador] = pDataAcc[0];
+        lista_acely[contador] = pDataAcc[1];
+        lista_acelz[contador] = pDataAcc[2];
+
+        if (contador >= 10){
+        	acel_x=0;
+        	acel_y=0;
+        	acel_z=0;
+        	for (int i = 0; i < 10; i++){
+        		temp_acel_x += lista_acelx[i];
+        		temp_acel_y += lista_acely[i];
+        		temp_acel_z += lista_acelz[i];
+        	}
+
+        	acel_x = temp_acel_x/10;
+        	acel_y = temp_acel_y/10;
+        	acel_z = temp_acel_z/10;
+
+        	acel_flag=1;
+        }
 
 
     	if (pDataAcc[0]>=0 && pDataAcc[0]<10){							/* Eje X */
@@ -1253,6 +1287,16 @@ void acel_task_function(void *argument)
 
     	else
     		__NOP();
+
+
+    	if (modo_op == 1){
+        	osDelay(pdMS_TO_TICKS(6000));
+    	}
+    	else
+    	{
+    		osDelay(pdMS_TO_TICKS(2000));
+    	}
+
     	}
 
     osDelay(1);
