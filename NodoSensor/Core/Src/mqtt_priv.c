@@ -6,6 +6,8 @@
 #include <include/core_mqtt.h>
 #include "stm32l475e_iot01.h"
 
+#include <stdlib.h>
+
 static uint8_t ucSharedBuffer[ NETWORK_BUFFER_SIZE ];
 /** @brief Static buffer used to hold MQTT messages being sent and received. */
 static MQTTFixedBuffer_t xBuffer =
@@ -33,6 +35,8 @@ static uint16_t usSubscribePacketIdentifier;
  */
 static uint32_t ulGlobalEntryTimeMs;
 
+
+extern uint8_t modo_op;
 
 TransportStatus_t prvConnectToServer( NetworkContext_t * pxNetworkContext )
 {
@@ -178,6 +182,7 @@ void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext, char * topic )
                                   usSubscribePacketIdentifier );
         if(xResult==MQTTSuccess) LOG(("Subscription to %s, result: %d, success\n",topic,xResult));
         else LOG(("Subscription to %s, result: %d, failed\n",topic,xResult));
+    	modo_op = xResult;
         //configASSERT( xResult == MQTTSuccess );
 
         /* Process incoming packet from the broker. After sending the
@@ -212,11 +217,11 @@ void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext, char * topic )
     } while( xFailedSubscribeToTopic == true  );
 }
 
-void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t *pxPublishInfo )
+uint16_t prvMQTTProcessIncomingPublish( MQTTPublishInfo_t *pxPublishInfo)
 {
 	char buffer1[128];
 	char buffer2[128];
-    const char * pTopicName;
+    //const char * pTopicName;
 
 	// pPayload no termina en \0, hay que copiarlo en un buffer para imprimirlo. Lo mismo con pTopicName
 	memcpy(buffer1,pxPublishInfo->pPayload,min(127,pxPublishInfo->payloadLength));
@@ -224,11 +229,12 @@ void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t *pxPublishInfo )
 	memcpy(buffer2,pxPublishInfo->pTopicName,min(127,pxPublishInfo->topicNameLength));
 	buffer2[min(1023,pxPublishInfo->topicNameLength)]='\0';
 
-	LOG(("Topic \"%s\": publicado \"%s\"\n",buffer2,buffer1));
+	printf("Topic \"%s\": publicado \"%s\"\n",buffer2,buffer1);
 
   // Actuar localmente sobre los LEDs o alguna otra cosa
-	if(buffer1[0]=='1') BSP_LED_On(LED2);
-	if(buffer1[0]=='0') BSP_LED_Off(LED2);
+	//if(buffer1[0]=='1') BSP_LED_On(LED2);
+	//if(buffer1[0]=='0') BSP_LED_Off(LED2);
+	return atoi(buffer1);
 
 }
 
@@ -258,14 +264,18 @@ void prvEventCallback( MQTTContext_t * pxMQTTContext,
     /* The MQTT context is not used for this demo. */
     ( void ) pxMQTTContext;
 
+    printf("Ha llegado un paquete MQTT. \n\r");
     if( ( pxPacketInfo->type & 0xF0U ) == MQTT_PACKET_TYPE_PUBLISH )
     {
+        printf("Ha llegado un paquete tipo Publish. \n\r");
     	// procesar un paquete PUBLISH recibido,
     	//por ejemplo llamando a la función prvMQTTProcessIncomingPublish, que hay que desarrollar
-      prvMQTTProcessIncomingPublish( pxDeserializedInfo->pPublishInfo );
+    	modo_op = prvMQTTProcessIncomingPublish( pxDeserializedInfo->pPublishInfo );
     }
     else
     {
+        printf("Ha llegado un paquete que NO es tipo Publish. \n\r");
+    	modo_op = prvMQTTProcessIncomingPublish( pxDeserializedInfo->pPublishInfo );
        // también se podría hacer algo con otros paquetes si fuera necesario
     	 //prvMQTTProcessResponse( pxPacketInfo, pxDeserializedInfo->packetIdentifier );
     }

@@ -13,9 +13,10 @@ DEVICE_LABEL = "Monitor_Node"
 DEVICE_LABEL_2 = "talud1"
 broker_address="industrial.api.ubidots.com"
 topic = "/v1.6/devices/" + DEVICE_LABEL + "/+"
-#token = "BBUS-2AVUwvm4bAkHvZPB4ubI00po18uyOa" # Roberto
-token = "BBUS-8WokbMlGFTnwATPyUtMFoccYgkuYNR" # Fer 1er dispositivo
-token2 = "BBUS-D15oqRAF11mvJqLWOdzrrskIzMxXzS" #Fer 2o dispositivo
+token = "BBUS-2AVUwvm4bAkHvZPB4ubI00po18uyOa" # Roberto
+token2 = "BBUS-x0ctVBVOqeus6M6HcB73bwe4vBuwqH" # Roberto
+#token = "BBUS-8WokbMlGFTnwATPyUtMFoccYgkuYNR" # Fer 1er dispositivo
+#token2 = "BBUS-D15oqRAF11mvJqLWOdzrrskIzMxXzS" #Fer 2o dispositivo
 # Crear lista con las variables 
 variables = ["temperatura", "acel_x", "acel_y", "acel_z", "humedad"]
 

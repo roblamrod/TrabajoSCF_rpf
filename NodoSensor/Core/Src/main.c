@@ -118,12 +118,12 @@ int _write(int file, char *ptr, int len){
 	return len;
 }
 
-uint8_t modo_op;
-
 int16_t pDataAcc[3];
 int16_t lista_acelx[10]; //Lista para guardar los valores de las aceleraciones para luego hacerles la media.
 int16_t lista_acely[10];
 int16_t lista_acelz[10];
+
+uint8_t modo_op;
 
 ACCELERO_StatusTypeDef iniAcc;
 char str_x[14] = "";				/* cadena para la aceleraciÃ³n en el eje X */
@@ -1092,6 +1092,7 @@ char payLoad[64];
 
    if (acel_flag==1){
 	   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f, \"acel_x\":%d, \"acel_y\":%d, \"acel_z\":%d}",ftemp, fhum, acel_x,acel_y,acel_z);
+	   acel_flag = 0;
    }
    else{
 	   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f}",ftemp, fhum);
@@ -1195,10 +1196,11 @@ void acel_task_function(void *argument)
     	HAL_UART_Transmit(&huart1,(uint8_t *)timestamp,26,1000);		/* TransmisiÃ³n de la informaciÃ³n por UART */
 
 
-        lista_acelx[contador] = pDataAcc[0];
+    	lista_acelx[contador] = pDataAcc[0];
         lista_acely[contador] = pDataAcc[1];
         lista_acelz[contador] = pDataAcc[2];
-
+        //printf("Contador: %d. \n\r",contador);
+        //printf("Modo op %d. \n\r",modo_op);
         if (contador >= 10){
         	acel_x=0;
         	acel_y=0;
@@ -1214,7 +1216,21 @@ void acel_task_function(void *argument)
         	acel_z = temp_acel_z/10;
 
         	acel_flag=1;
+        	contador=0;
+        	temp_acel_x=0;
+        	temp_acel_y=0;
+        	temp_acel_z=0;
+        	printf("Modo operacion: %d. \n\r", modo_op);
+        	if (modo_op == 1){
+            	osDelay(pdMS_TO_TICKS(20000));
+        	}
+        	else
+        	{
+        		osDelay(pdMS_TO_TICKS(60000));
+        	}
+
         }
+        contador=contador+1;
 
 
     	if (pDataAcc[0]>=0 && pDataAcc[0]<10){							/* Eje X */
@@ -1296,16 +1312,17 @@ void acel_task_function(void *argument)
     	else
     		__NOP();
 
-
+/*
     	if (modo_op == 1){
-        	osDelay(pdMS_TO_TICKS(6000));
+        	osDelay(pdMS_TO_TICKS(2000));
     	}
     	else
     	{
-    		osDelay(pdMS_TO_TICKS(2000));
+    		osDelay(pdMS_TO_TICKS(6000));
+    	}
+*/
     	}
 
-    	}
 
     osDelay(1);
   }
