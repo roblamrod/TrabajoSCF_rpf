@@ -70,8 +70,8 @@ all: main-build
 main-build: TrabajoSCF_sensor.elf secondary-outputs
 
 # Tool invocations
-TrabajoSCF_sensor.elf TrabajoSCF_sensor.map: $(OBJS) $(USER_OBJS) C:\Users\pablo\STM32CubeIDE\workspace_1.13.2\TrabajoSCF_rpf\NodoSensor\STM32L475VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "TrabajoSCF_sensor.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\pablo\STM32CubeIDE\workspace_1.13.2\TrabajoSCF_rpf\NodoSensor\STM32L475VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TrabajoSCF_sensor.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+TrabajoSCF_sensor.elf TrabajoSCF_sensor.map: $(OBJS) $(USER_OBJS) C:\Users\rober\STM32CubeIDE\workspace_1.13.2\Trabajo_SCF_rpf\NodoSensor\STM32L475VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "TrabajoSCF_sensor.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\rober\STM32CubeIDE\workspace_1.13.2\Trabajo_SCF_rpf\NodoSensor\STM32L475VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TrabajoSCF_sensor.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

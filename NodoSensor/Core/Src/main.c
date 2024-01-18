@@ -123,7 +123,7 @@ int16_t lista_acelx[10]; //Lista para guardar los valores de las aceleraciones p
 int16_t lista_acely[10];
 int16_t lista_acelz[10];
 
-uint8_t modo_op;
+int modo_operacion = 0;
 
 ACCELERO_StatusTypeDef iniAcc;
 char str_x[14] = "";				/* cadena para la aceleraciÃ³n en el eje X */
@@ -1080,11 +1080,12 @@ char payLoad[64];
 
  // subscribirse a un topic
  LOG(("Trying to subscribe to topic\n"));
- prvMQTTSubscribeToTopic(&xMQTTContext,pcEstadoTopic);
+ modo_operacion = 0;
+ prvMQTTSubscribeToTopic(&xMQTTContext,pcModOpTopic);
  for( ; ; )
  {
    /* Publicar cada 5 segundos */
-   osDelay(5000);
+   //osDelay(5000);
    ftemp=BSP_TSENSOR_ReadTemp();
    fhum=BSP_HSENSOR_ReadHumidity();
 
@@ -1101,7 +1102,6 @@ char payLoad[64];
    prvMQTTPublishToTopic(&xMQTTContext,pcBaseTopic,payLoad);
 
    MQTT_ProcessLoop(&xMQTTContext);
-
  }
 }
 
@@ -1200,7 +1200,7 @@ void acel_task_function(void *argument)
         lista_acely[contador] = pDataAcc[1];
         lista_acelz[contador] = pDataAcc[2];
         //printf("Contador: %d. \n\r",contador);
-        //printf("Modo op %d. \n\r",modo_op);
+        //printf("Modo op %d. \n\r",modo_operacion);
         if (contador >= 10){
         	acel_x=0;
         	acel_y=0;
@@ -1220,13 +1220,13 @@ void acel_task_function(void *argument)
         	temp_acel_x=0;
         	temp_acel_y=0;
         	temp_acel_z=0;
-        	printf("Modo operacion: %d. \n\r", modo_op);
-        	if (modo_op == 1){
-            	osDelay(pdMS_TO_TICKS(20000));
+        	printf("Modo operacion en main: %d. \n\r", modo_operacion);
+        	if (modo_operacion == 1){
+            	osDelay(pdMS_TO_TICKS(2000));//(20000));
         	}
         	else
         	{
-        		osDelay(pdMS_TO_TICKS(60000));
+        		osDelay(pdMS_TO_TICKS(6000));//(60000));
         	}
 
         }
@@ -1313,7 +1313,7 @@ void acel_task_function(void *argument)
     		__NOP();
 
 /*
-    	if (modo_op == 1){
+    	if (modo_operacion == 1){
         	osDelay(pdMS_TO_TICKS(2000));
     	}
     	else

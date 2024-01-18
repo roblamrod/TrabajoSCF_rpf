@@ -10,7 +10,6 @@ import math
 import numpy as np
 ############
 DEVICE_LABEL = "Monitor_Node"
-DEVICE_LABEL_2 = "talud1"
 broker_address="industrial.api.ubidots.com"
 topic = "/v1.6/devices/" + DEVICE_LABEL + "/+"
 token = "BBUS-2AVUwvm4bAkHvZPB4ubI00po18uyOa" # Roberto
@@ -176,7 +175,7 @@ def main():
         print("Estado old_critical", old_critical)
         if old_critical != diccionario_publicacion_2["estado"]: # ang_critical_flag:
             print(">>>> Angulo critico")
-            client2.publish("/v1.6/devices/" + DEVICE_LABEL_2, json.dumps(diccionario_publicacion_2))
+            client2.publish("/v1.6/devices/" + DEVICE_LABEL, json.dumps(diccionario_publicacion_2))
         old_critical = diccionario_publicacion_2["estado"]
 
         #print("message qos=",message.qos)

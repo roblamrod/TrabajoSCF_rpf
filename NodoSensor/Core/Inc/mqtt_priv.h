@@ -41,7 +41,7 @@ void prvEventCallback( MQTTContext_t * ,MQTTPacketInfo_t * ,MQTTDeserializedInfo
 void init_transport_from_socket( uint8_t, uint8_t,
                                  NetworkContext_t * ,
                                  TransportInterface_t *  );
-uint16_t prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * );
+int prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * );
 static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
                                     uint16_t usPacketId );
 
