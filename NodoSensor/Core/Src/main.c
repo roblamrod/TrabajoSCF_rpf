@@ -1201,7 +1201,7 @@ void acel_task_function(void *argument)
         lista_acelz[contador] = pDataAcc[2];
         //printf("Contador: %d. \n\r",contador);
         //printf("Modo op %d. \n\r",modo_operacion);
-        if (contador >= 10){
+        if (contador >= 9){
         	acel_x=0;
         	acel_y=0;
         	acel_z=0;

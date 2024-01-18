@@ -3833,9 +3833,9 @@ void acel_task_function(void *argument)
  8001eac:	f822 1013 	strh.w	r1, [r2, r3, lsl #1]
         //printf("Contador: %d. \n\r",contador);
         //printf("Modo op %d. \n\r",modo_operacion);
-        if (contador >= 10){
+        if (contador >= 9){
  8001eb0:	7dfb      	ldrb	r3, [r7, #23]
- 8001eb2:	2b09      	cmp	r3, #9
+ 8001eb2:	2b08      	cmp	r3, #8
  8001eb4:	d96b      	bls.n	8001f8e <acel_task_function+0x25a>
         	acel_x=0;
  8001eb6:	4b5d      	ldr	r3, [pc, #372]	; (800202c <acel_task_function+0x2f8>)
