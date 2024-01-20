@@ -39,8 +39,8 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define SSID     "iPhone de Fernando"
-#define PASSWORD "garruchin9"
+#define SSID     "plutow"
+#define PASSWORD "abcdefgh"
 //#define WIFISECURITY WIFI_ECN_OPEN
 #define WIFISECURITY WIFI_ECN_WPA2_PSK
 
@@ -1070,7 +1070,7 @@ MQTTStatus_t xMQTTStatus;
 TransportStatus_t xNetworkStatus;
 float ftemp;
 float fhum;
-char payLoad[64];
+char payLoad[128];
  /* Attempt to connect to the MQTT broker. The socket is returned in
  * the network context structure. */
  xNetworkStatus = prvConnectToServer( &xNetworkContext );
@@ -1079,13 +1079,13 @@ char payLoad[64];
  prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext );
 
  // subscribirse a un topic
- LOG(("Trying to subscribe to topic\n"));
+ printf("Trying to subscribe to topic\n");
  modo_operacion = 0;
  prvMQTTSubscribeToTopic(&xMQTTContext,pcModOpTopic);
  for( ; ; )
  {
    /* Publicar cada 5 segundos */
-   //osDelay(5000);
+   osDelay(5000);
    ftemp=BSP_TSENSOR_ReadTemp();
    fhum=BSP_HSENSOR_ReadHumidity();
 
@@ -1205,7 +1205,7 @@ void acel_task_function(void *argument)
         	acel_x=0;
         	acel_y=0;
         	acel_z=0;
-        	for (int i = 0; i < 10; i++){
+        	for (int i = 0; i <= 9; i++){
         		temp_acel_x += lista_acelx[i];
         		temp_acel_y += lista_acely[i];
         		temp_acel_z += lista_acelz[i];
@@ -1231,99 +1231,7 @@ void acel_task_function(void *argument)
 
         }
         contador=contador+1;
-
-
-    	if (pDataAcc[0]>=0 && pDataAcc[0]<10){							/* Eje X */
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,10,1000);
-    	}
-    	else if (pDataAcc[0]>=10 && pDataAcc[0]<100){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,11,1000);
-    	}
-    	else if (pDataAcc[0]>=100 && pDataAcc[0]<1000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,12,1000);
-    	}
-    	else if (pDataAcc[0]>=1000 && pDataAcc[0]<10000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,13,1000);
-    	}
-    	else if (pDataAcc[0]<0 && pDataAcc[0]>-10){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,11,1000);
-    	}
-    	else if (pDataAcc[0]<=-10 && pDataAcc[0]>-100){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,12,1000);
-    	}
-    	else if (pDataAcc[0]<=-100 && pDataAcc[0]>-1000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,13,1000);
-    	}
-    	else if (pDataAcc[0]<=-1000 && pDataAcc[0]>-10000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_x,14,1000);
-    	}
-
-
-    	if (pDataAcc[1]>=0 && pDataAcc[1]<10){						/* Eje Y */
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,10,1000);
-    	}
-    	else if (pDataAcc[1]>=10 && pDataAcc[1]<100){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,11,1000);
-    	}
-    	else if (pDataAcc[1]>=100 && pDataAcc[1]<1000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,12,1000);
-    	}
-    	else if (pDataAcc[1]>=1000 && pDataAcc[1]<10000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,13,1000);
-    	}
-    	else if (pDataAcc[1]<0 && pDataAcc[1]>-10){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,11,1000);
-    	}
-    	else if (pDataAcc[1]<=-10 && pDataAcc[1]>-100){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,12,1000);
-    	}
-    	else if (pDataAcc[1]<=-100 && pDataAcc[1]>-1000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,13,1000);
-    	}
-    	else if (pDataAcc[1]<=-1000 && pDataAcc[1]>-10000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_y,14,1000);
-    	}
-
-    	if (pDataAcc[2]>=0 && pDataAcc[2]<10){						/* Eje Z */
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,10,1000);
-    	}
-    	else if (pDataAcc[2]>=10 && pDataAcc[2]<100){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,11,1000);
-    	}
-    	else if (pDataAcc[2]>=100 && pDataAcc[2]<1000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,12,1000);
-    	}
-    	else if (pDataAcc[2]>=1000 && pDataAcc[2]<10000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,13,1000);
-    	}
-    	else if (pDataAcc[2]<0 && pDataAcc[2]>-10){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,11,1000);
-    	}
-    	else if (pDataAcc[2]<=-10 && pDataAcc[2]>-100){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,12,1000);
-    	}
-    	else if (pDataAcc[2]<=-100 && pDataAcc[2]>-1000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,13,1000);
-    	}
-    	else if (pDataAcc[2]<=-1000 && pDataAcc[2]>-10000){
-    		HAL_UART_Transmit(&huart1,(uint8_t *)str_z,14,1000);
-    	}
-
-    	else
-    		__NOP();
-
-/*
-    	if (modo_operacion == 1){
-        	osDelay(pdMS_TO_TICKS(2000));
-    	}
-    	else
-    	{
-    		osDelay(pdMS_TO_TICKS(6000));
-    	}
-*/
-    	}
-
-
+      }
     osDelay(1);
   }
   /* USER CODE END acel_task_function */

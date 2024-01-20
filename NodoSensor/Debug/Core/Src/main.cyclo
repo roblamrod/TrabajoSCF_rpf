@@ -20,5 +20,5 @@
 ../Core/Src/main.c:1118:1:__io_putchar	1
 ../Core/Src/main.c:1133:6:SPI3_IRQHandler	1
 ../Core/Src/main.c:1139:6:wifiStartTask	1
-../Core/Src/main.c:1159:6:acel_task_function	56
-../Core/Src/main.c:1336:6:Error_Handler	1
+../Core/Src/main.c:1159:6:acel_task_function	8
+../Core/Src/main.c:1244:6:Error_Handler	1

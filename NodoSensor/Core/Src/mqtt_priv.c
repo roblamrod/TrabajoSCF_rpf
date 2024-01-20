@@ -89,7 +89,7 @@ void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                          &xBuffer );
 
     configASSERT( xResult == MQTTSuccess );
-    LOG(("MQTT initialized\n"));
+    printf("MQTT initialized\n");
 
     /* Many fields not used in this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
@@ -126,7 +126,7 @@ void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                             1000U,
                             &xSessionPresent );
     configASSERT( xResult == MQTTSuccess );
-    LOG(("MQTT connected to broker\n"));
+    printf("MQTT connected to broker\n");
 
 }
 
@@ -149,7 +149,7 @@ void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext, char * topic, void * 
 
     /* Send PUBLISH packet. Packet ID is not used for a QoS0 publish. */
     xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, 0U );
-    if(xResult==MQTTSuccess) LOG(("Published to topic %s: %s\n",topic,payload));
+    if(xResult==MQTTSuccess) printf("Published to topic %s: %s\n",topic,payload);
     //configASSERT( xResult == MQTTSuccess );
 }
 

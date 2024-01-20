@@ -16,9 +16,9 @@
 ../Core/Src/main.c:967:5:wifi_connect	24	static
 ../Core/Src/main.c:1015:6:HAL_GPIO_EXTI_Callback	16	static
 ../Core/Src/main.c:1045:6:StartDefaultTask	16	static
-../Core/Src/main.c:1064:6:MQTTTask	232	static,ignoring_inline_asm
+../Core/Src/main.c:1064:6:MQTTTask	296	static,ignoring_inline_asm
 ../Core/Src/main.c:1118:1:__io_putchar	16	static
 ../Core/Src/main.c:1133:6:SPI3_IRQHandler	8	static
 ../Core/Src/main.c:1139:6:wifiStartTask	16	static
-../Core/Src/main.c:1159:6:acel_task_function	48	static,ignoring_inline_asm
-../Core/Src/main.c:1336:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:1159:6:acel_task_function	48	static
+../Core/Src/main.c:1244:6:Error_Handler	4	static,ignoring_inline_asm
