@@ -21,9 +21,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   8 .data         000002e0  20000000  0801852c  00030000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00003cf8  200002e0  0801880c  000302e0  2**2
+  9 .bss          000044c8  200002e0  0801880c  000302e0  2**2
                   ALLOC
- 10 ._user_heap_stack 00000600  20003fd8  0801880c  00033fd8  2**0
+ 10 ._user_heap_stack 00000600  200047a8  0801880c  000347a8  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  000302e0  2**0
                   CONTENTS, READONLY
@@ -3949,15 +3949,15 @@ void acel_task_function(void *argument)
  8001f7e:	681b      	ldr	r3, [r3, #0]
  8001f80:	2b01      	cmp	r3, #1
  8001f82:	d104      	bne.n	8001f8e <acel_task_function+0x252>
-            	osDelay(pdMS_TO_TICKS(2000));//(20000));
- 8001f84:	f44f 60fa 	mov.w	r0, #2000	; 0x7d0
+            	osDelay(pdMS_TO_TICKS(20000));//(20000));
+ 8001f84:	f644 6020 	movw	r0, #20000	; 0x4e20
  8001f88:	f00d f809 	bl	800ef9e <osDelay>
  8001f8c:	e003      	b.n	8001f96 <acel_task_function+0x25a>
         	}
         	else
         	{
-        		osDelay(pdMS_TO_TICKS(6000));//(60000));
- 8001f8e:	f241 7070 	movw	r0, #6000	; 0x1770
+        		osDelay(pdMS_TO_TICKS(60000));//(60000));
+ 8001f8e:	f64e 2060 	movw	r0, #60000	; 0xea60
  8001f92:	f00d f804 	bl	800ef9e <osDelay>
         	}
 
@@ -6272,7 +6272,7 @@ void *_sbrk(ptrdiff_t incr)
  8002d28:	20018000 	.word	0x20018000
  8002d2c:	00000400 	.word	0x00000400
  8002d30:	20000f40 	.word	0x20000f40
- 8002d34:	20003fd8 	.word	0x20003fd8
+ 8002d34:	200047a8 	.word	0x200047a8
 
 08002d38 <SystemInit>:
   * @brief  Setup the microcontroller system.
@@ -6397,7 +6397,7 @@ LoopForever:
   ldr r2, =_sbss
  8002da4:	200002e0 	.word	0x200002e0
   ldr r4, =_ebss
- 8002da8:	20003fd8 	.word	0x20003fd8
+ 8002da8:	200047a8 	.word	0x200047a8
 
 08002dac <ADC1_2_IRQHandler>:
  * @retval : None
@@ -48866,12 +48866,12 @@ void *pvReturn = NULL;
  8011a02:	46bd      	mov	sp, r7
  8011a04:	bd80      	pop	{r7, pc}
  8011a06:	bf00      	nop
- 8011a08:	20003e74 	.word	0x20003e74
- 8011a0c:	20003e88 	.word	0x20003e88
- 8011a10:	20003e78 	.word	0x20003e78
- 8011a14:	20003e6c 	.word	0x20003e6c
- 8011a18:	20003e7c 	.word	0x20003e7c
- 8011a1c:	20003e80 	.word	0x20003e80
+ 8011a08:	20004644 	.word	0x20004644
+ 8011a0c:	20004658 	.word	0x20004658
+ 8011a10:	20004648 	.word	0x20004648
+ 8011a14:	2000463c 	.word	0x2000463c
+ 8011a18:	2000464c 	.word	0x2000464c
+ 8011a1c:	20004650 	.word	0x20004650
 
 08011a20 <vPortFree>:
 /*-----------------------------------------------------------*/
@@ -49002,9 +49002,9 @@ BlockLink_t *pxLink;
  8011ad2:	46bd      	mov	sp, r7
  8011ad4:	bd80      	pop	{r7, pc}
  8011ad6:	bf00      	nop
- 8011ad8:	20003e88 	.word	0x20003e88
- 8011adc:	20003e78 	.word	0x20003e78
- 8011ae0:	20003e84 	.word	0x20003e84
+ 8011ad8:	20004658 	.word	0x20004658
+ 8011adc:	20004648 	.word	0x20004648
+ 8011ae0:	20004654 	.word	0x20004654
 
 08011ae4 <prvHeapInit>:
 	/* This just exists to keep the linker quiet. */
@@ -49020,7 +49020,7 @@ BlockLink_t *pxFirstFreeBlock;
 uint8_t *pucAlignedHeap;
 size_t uxAddress;
 size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
- 8011aea:	f241 7370 	movw	r3, #6000	; 0x1770
+ 8011aea:	f44f 53fa 	mov.w	r3, #8000	; 0x1f40
  8011aee:	60bb      	str	r3, [r7, #8]
 
 	/* Ensure the heap starts on a correctly aligned boundary. */
@@ -49138,11 +49138,11 @@ size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
  8011b8a:	f85d 7b04 	ldr.w	r7, [sp], #4
  8011b8e:	4770      	bx	lr
  8011b90:	200026fc 	.word	0x200026fc
- 8011b94:	20003e6c 	.word	0x20003e6c
- 8011b98:	20003e74 	.word	0x20003e74
- 8011b9c:	20003e7c 	.word	0x20003e7c
- 8011ba0:	20003e78 	.word	0x20003e78
- 8011ba4:	20003e88 	.word	0x20003e88
+ 8011b94:	2000463c 	.word	0x2000463c
+ 8011b98:	20004644 	.word	0x20004644
+ 8011b9c:	2000464c 	.word	0x2000464c
+ 8011ba0:	20004648 	.word	0x20004648
+ 8011ba4:	20004658 	.word	0x20004658
 
 08011ba8 <prvInsertBlockIntoFreeList>:
 /*-----------------------------------------------------------*/
@@ -49286,8 +49286,8 @@ uint8_t *puc;
  8011c4c:	f85d 7b04 	ldr.w	r7, [sp], #4
  8011c50:	4770      	bx	lr
  8011c52:	bf00      	nop
- 8011c54:	20003e6c 	.word	0x20003e6c
- 8011c58:	20003e74 	.word	0x20003e74
+ 8011c54:	2000463c 	.word	0x2000463c
+ 8011c58:	20004644 	.word	0x20004644
 
 08011c5c <__assert_func>:
  8011c5c:	b51f      	push	{r0, r1, r2, r3, r4, lr}
@@ -50794,7 +50794,7 @@ uint8_t *puc;
  8012b04:	08012df7 	.word	0x08012df7
  8012b08:	08012e2f 	.word	0x08012e2f
  8012b0c:	08012e53 	.word	0x08012e53
- 8012b10:	20003e8c 	.word	0x20003e8c
+ 8012b10:	2000465c 	.word	0x2000465c
 
 08012b14 <stdio_exit_handler>:
  8012b14:	4a02      	ldr	r2, [pc, #8]	; (8012b20 <stdio_exit_handler+0xc>)
@@ -50829,9 +50829,9 @@ uint8_t *puc;
  8012b58:	f003 b8fe 	b.w	8015d58 <_fflush_r>
  8012b5c:	bd10      	pop	{r4, pc}
  8012b5e:	bf00      	nop
- 8012b60:	20003e8c 	.word	0x20003e8c
- 8012b64:	20003ef4 	.word	0x20003ef4
- 8012b68:	20003f5c 	.word	0x20003f5c
+ 8012b60:	2000465c 	.word	0x2000465c
+ 8012b64:	200046c4 	.word	0x200046c4
+ 8012b68:	2000472c 	.word	0x2000472c
 
 08012b6c <global_stdio_init.part.0>:
  8012b6c:	b510      	push	{r4, lr}
@@ -50852,21 +50852,21 @@ uint8_t *puc;
  8012b92:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
  8012b96:	2112      	movs	r1, #18
  8012b98:	f7ff bf86 	b.w	8012aa8 <std>
- 8012b9c:	20003fc4 	.word	0x20003fc4
- 8012ba0:	20003e8c 	.word	0x20003e8c
+ 8012b9c:	20004794 	.word	0x20004794
+ 8012ba0:	2000465c 	.word	0x2000465c
  8012ba4:	08012b15 	.word	0x08012b15
 
 08012ba8 <__sfp_lock_acquire>:
  8012ba8:	4801      	ldr	r0, [pc, #4]	; (8012bb0 <__sfp_lock_acquire+0x8>)
  8012baa:	f000 bb5a 	b.w	8013262 <__retarget_lock_acquire_recursive>
  8012bae:	bf00      	nop
- 8012bb0:	20003fcd 	.word	0x20003fcd
+ 8012bb0:	2000479d 	.word	0x2000479d
 
 08012bb4 <__sfp_lock_release>:
  8012bb4:	4801      	ldr	r0, [pc, #4]	; (8012bbc <__sfp_lock_release+0x8>)
  8012bb6:	f000 bb55 	b.w	8013264 <__retarget_lock_release_recursive>
  8012bba:	bf00      	nop
- 8012bbc:	20003fcd 	.word	0x20003fcd
+ 8012bbc:	2000479d 	.word	0x2000479d
 
 08012bc0 <__sinit>:
  8012bc0:	b510      	push	{r4, lr}
@@ -50886,7 +50886,7 @@ uint8_t *puc;
  8012be4:	e7f2      	b.n	8012bcc <__sinit+0xc>
  8012be6:	bf00      	nop
  8012be8:	08012b2d 	.word	0x08012b2d
- 8012bec:	20003fc4 	.word	0x20003fc4
+ 8012bec:	20004794 	.word	0x20004794
 
 08012bf0 <fiprintf>:
  8012bf0:	b40e      	push	{r1, r2, r3}
@@ -51550,7 +51550,7 @@ uint8_t *puc;
  8013196:	b103      	cbz	r3, 801319a <_close_r+0x1a>
  8013198:	6023      	str	r3, [r4, #0]
  801319a:	bd38      	pop	{r3, r4, r5, pc}
- 801319c:	20003fc8 	.word	0x20003fc8
+ 801319c:	20004798 	.word	0x20004798
 
 080131a0 <_lseek_r>:
  80131a0:	b538      	push	{r3, r4, r5, lr}
@@ -51568,7 +51568,7 @@ uint8_t *puc;
  80131ba:	b103      	cbz	r3, 80131be <_lseek_r+0x1e>
  80131bc:	6023      	str	r3, [r4, #0]
  80131be:	bd38      	pop	{r3, r4, r5, pc}
- 80131c0:	20003fc8 	.word	0x20003fc8
+ 80131c0:	20004798 	.word	0x20004798
 
 080131c4 <_read_r>:
  80131c4:	b538      	push	{r3, r4, r5, lr}
@@ -51586,7 +51586,7 @@ uint8_t *puc;
  80131de:	b103      	cbz	r3, 80131e2 <_read_r+0x1e>
  80131e0:	6023      	str	r3, [r4, #0]
  80131e2:	bd38      	pop	{r3, r4, r5, pc}
- 80131e4:	20003fc8 	.word	0x20003fc8
+ 80131e4:	20004798 	.word	0x20004798
 
 080131e8 <_write_r>:
  80131e8:	b538      	push	{r3, r4, r5, lr}
@@ -51604,7 +51604,7 @@ uint8_t *puc;
  8013202:	b103      	cbz	r3, 8013206 <_write_r+0x1e>
  8013204:	6023      	str	r3, [r4, #0]
  8013206:	bd38      	pop	{r3, r4, r5, pc}
- 8013208:	20003fc8 	.word	0x20003fc8
+ 8013208:	20004798 	.word	0x20004798
 
 0801320c <__errno>:
  801320c:	4b01      	ldr	r3, [pc, #4]	; (8013214 <__errno+0x8>)
@@ -53049,7 +53049,7 @@ uint8_t *puc;
  8014022:	e7ca      	b.n	8013fba <_free_r+0x26>
  8014024:	b003      	add	sp, #12
  8014026:	bd30      	pop	{r4, r5, pc}
- 8014028:	20003fd0 	.word	0x20003fd0
+ 8014028:	200047a0 	.word	0x200047a0
 
 0801402c <malloc>:
  801402c:	4b02      	ldr	r3, [pc, #8]	; (8014038 <malloc+0xc>)
@@ -53085,7 +53085,7 @@ uint8_t *puc;
  8014070:	f04f 34ff 	mov.w	r4, #4294967295
  8014074:	4620      	mov	r0, r4
  8014076:	bd70      	pop	{r4, r5, r6, pc}
- 8014078:	20003fd4 	.word	0x20003fd4
+ 8014078:	200047a4 	.word	0x200047a4
 
 0801407c <_malloc_r>:
  801407c:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
@@ -53196,19 +53196,19 @@ uint8_t *puc;
  8014172:	605b      	str	r3, [r3, #4]
  8014174:	deff      	udf	#255	; 0xff
  8014176:	bf00      	nop
- 8014178:	20003fd0 	.word	0x20003fd0
+ 8014178:	200047a0 	.word	0x200047a0
 
 0801417c <__malloc_lock>:
  801417c:	4801      	ldr	r0, [pc, #4]	; (8014184 <__malloc_lock+0x8>)
  801417e:	f7ff b870 	b.w	8013262 <__retarget_lock_acquire_recursive>
  8014182:	bf00      	nop
- 8014184:	20003fcc 	.word	0x20003fcc
+ 8014184:	2000479c 	.word	0x2000479c
 
 08014188 <__malloc_unlock>:
  8014188:	4801      	ldr	r0, [pc, #4]	; (8014190 <__malloc_unlock+0x8>)
  801418a:	f7ff b86b 	b.w	8013264 <__retarget_lock_release_recursive>
  801418e:	bf00      	nop
- 8014190:	20003fcc 	.word	0x20003fcc
+ 8014190:	2000479c 	.word	0x2000479c
 
 08014194 <_Balloc>:
  8014194:	b570      	push	{r4, r5, r6, lr}
@@ -56210,7 +56210,7 @@ uint8_t *puc;
  8015ee6:	6023      	str	r3, [r4, #0]
  8015ee8:	bd38      	pop	{r3, r4, r5, pc}
  8015eea:	bf00      	nop
- 8015eec:	20003fc8 	.word	0x20003fc8
+ 8015eec:	20004798 	.word	0x20004798
 
 08015ef0 <_isatty_r>:
  8015ef0:	b538      	push	{r3, r4, r5, lr}
@@ -56226,7 +56226,7 @@ uint8_t *puc;
  8015f06:	b103      	cbz	r3, 8015f0a <_isatty_r+0x1a>
  8015f08:	6023      	str	r3, [r4, #0]
  8015f0a:	bd38      	pop	{r3, r4, r5, pc}
- 8015f0c:	20003fc8 	.word	0x20003fc8
+ 8015f0c:	20004798 	.word	0x20004798
 
 08015f10 <_kill_r>:
  8015f10:	b538      	push	{r3, r4, r5, lr}
@@ -56244,7 +56244,7 @@ uint8_t *puc;
  8015f2a:	6023      	str	r3, [r4, #0]
  8015f2c:	bd38      	pop	{r3, r4, r5, pc}
  8015f2e:	bf00      	nop
- 8015f30:	20003fc8 	.word	0x20003fc8
+ 8015f30:	20004798 	.word	0x20004798
 
 08015f34 <_getpid_r>:
  8015f34:	f7ec be57 	b.w	8002be6 <_getpid>
@@ -56263,7 +56263,7 @@ uint8_t *puc;
  8015f4e:	b103      	cbz	r3, 8015f52 <_sbrk_r+0x1a>
  8015f50:	6023      	str	r3, [r4, #0]
  8015f52:	bd38      	pop	{r3, r4, r5, pc}
- 8015f54:	20003fc8 	.word	0x20003fc8
+ 8015f54:	20004798 	.word	0x20004798
 
 08015f58 <nan>:
  8015f58:	ed9f 0b01 	vldr	d0, [pc, #4]	; 8015f60 <nan+0x8>

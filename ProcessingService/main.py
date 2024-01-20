@@ -12,10 +12,10 @@ import numpy as np
 DEVICE_LABEL = "Monitor_Node"
 broker_address="industrial.api.ubidots.com"
 topic = "/v1.6/devices/" + DEVICE_LABEL + "/+"
-token = "BBUS-2AVUwvm4bAkHvZPB4ubI00po18uyOa" # Roberto
-token2 = "BBUS-x0ctVBVOqeus6M6HcB73bwe4vBuwqH" # Roberto
-#token = "BBUS-8WokbMlGFTnwATPyUtMFoccYgkuYNR" # Fer 1er dispositivo
-#token2 = "BBUS-D15oqRAF11mvJqLWOdzrrskIzMxXzS" #Fer 2o dispositivo
+#token = "BBUS-2AVUwvm4bAkHvZPB4ubI00po18uyOa" # Roberto
+#token2 = "BBUS-x0ctVBVOqeus6M6HcB73bwe4vBuwqH" # Roberto
+token = "BBUS-8WokbMlGFTnwATPyUtMFoccYgkuYNR" # Fer 1er dispositivo
+token2 = "BBUS-D15oqRAF11mvJqLWOdzrrskIzMxXzS" #Fer 2o dispositivo
 # Crear lista con las variables 
 variables = ["temperatura", "acel_x", "acel_y", "acel_z", "humedad"]
 
@@ -41,7 +41,6 @@ ANG_CRITICAL = 25*math.pi/180 # 25 grados
 mensaje_recibido = False
 
 client = paho.mqtt.client.Client(client_id='P1')
-client2 = paho.mqtt.client.Client(client_id='P2')
 
 def on_message(client, userdata, message):
     # Variables globales
@@ -90,15 +89,8 @@ client.on_message = on_message
 client.on_disconnect = on_disconnect
 client.username_pw_set(token, "")
 
-client2.on_connect = on_connect
-#client.on_subscribe = on_suscribe
-client2.on_message = on_message
-client2.on_disconnect = on_disconnect
-client2.username_pw_set(token2, "")
-
 
 client.connect(host=broker_address, port=1883)
-client2.connect(host=broker_address, port=1883)
 # Crea un proceso llamando a client.loop_forever() utilizando el modulo threading
 
 # Crear un diccionario compartido entre los procesos para guardar los valores de las variables
@@ -175,7 +167,7 @@ def main():
         print("Estado old_critical", old_critical)
         if old_critical != diccionario_publicacion_2["estado"]: # ang_critical_flag:
             print(">>>> Angulo critico")
-            client2.publish("/v1.6/devices/" + DEVICE_LABEL, json.dumps(diccionario_publicacion_2))
+            client.publish("/v1.6/devices/" + DEVICE_LABEL, json.dumps(diccionario_publicacion_2))
         old_critical = diccionario_publicacion_2["estado"]
 
         #print("message qos=",message.qos)

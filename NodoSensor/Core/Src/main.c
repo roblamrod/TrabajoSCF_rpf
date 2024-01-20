@@ -90,7 +90,7 @@ const osThreadAttr_t defaultTask_attributes = {
 osThreadId_t wifiStartHandle;
 const osThreadAttr_t wifiStart_attributes = {
   .name = "wifiStart",
-  .stack_size = 512 * 4,
+  .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for acel_task */
@@ -1222,11 +1222,11 @@ void acel_task_function(void *argument)
         	temp_acel_z=0;
         	printf("Modo operacion en main: %d. \n\r", modo_operacion);
         	if (modo_operacion == 1){
-            	osDelay(pdMS_TO_TICKS(2000));//(20000));
+            	osDelay(pdMS_TO_TICKS(20000));//(20000));
         	}
         	else
         	{
-        		osDelay(pdMS_TO_TICKS(6000));//(60000));
+        		osDelay(pdMS_TO_TICKS(60000));//(60000));
         	}
 
         }
