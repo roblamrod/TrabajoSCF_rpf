@@ -39,8 +39,8 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define SSID     "plutow"
-#define PASSWORD "abcdefgh"
+#define SSID     "pabkramar" //"plutow" //"iPhone de Fernando"
+#define PASSWORD "12345678" //"abcdefgh" //"garruchin9"
 //#define WIFISECURITY WIFI_ECN_OPEN
 #define WIFISECURITY WIFI_ECN_WPA2_PSK
 
