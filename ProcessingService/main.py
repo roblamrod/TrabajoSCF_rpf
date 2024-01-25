@@ -33,7 +33,7 @@ aceleracion_old = {"acel_x": None, "acel_y": None, "acel_z": None}
 ANG_REF_Y = np.pi/2
 ANG_REF_Z = 0
 # Humedad umbral
-HUMIDITY_THRESHOLD = 80
+HUMIDITY_THRESHOLD = 60
 ANG_THRESHOLD = 5*math.pi/180 # 5 grados
 # Angulo crítico 
 ANG_CRITICAL = 25*math.pi/180 # 25 grados
@@ -79,7 +79,6 @@ def ang_inclinacion (ax,ay,az):
     accel_ang_incl_y = math.atan(az/np.sqrt(math.pow(ax,2) + math.pow(ay,2)))
     accel_ang_incl_z = math.atan(ax/np.sqrt(math.pow(ay,2) + math.pow(az,2)))
     return accel_ang_incl_x, accel_ang_incl_y, accel_ang_incl_z
-
  
 
 
@@ -164,11 +163,11 @@ def main():
             client.publish("/v1.6/devices/" + DEVICE_LABEL, json.dumps(diccionario_publicacion))
         
         print("Estado critico", diccionario_publicacion_2["estado"])
-        print("Estado old_critical", old_critical)
-        if old_critical != diccionario_publicacion_2["estado"]: # ang_critical_flag:
-            print(">>>> Angulo critico")
-            client.publish("/v1.6/devices/" + DEVICE_LABEL, json.dumps(diccionario_publicacion_2))
-        old_critical = diccionario_publicacion_2["estado"]
+        #print("Estado old_critical", old_critical)
+        #if old_critical != diccionario_publicacion_2["estado"]: # ang_critical_flag:
+        #   print(">>>> Angulo critico")
+        client.publish("/v1.6/devices/" + DEVICE_LABEL, json.dumps(diccionario_publicacion_2))
+        #old_critical = diccionario_publicacion_2["estado"]
 
         #print("message qos=",message.qos)
         #print("message retain flag=",message.retain)

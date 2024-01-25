@@ -236,7 +236,7 @@ int prvMQTTProcessIncomingPublish( MQTTPublishInfo_t *pxPublishInfo)
 	int result = 0;
 	//  "{"value":1.0,"timestamp":1705943710427,"context":{},"created_at":1705943710427}"
 	for (int i=0; i<=20; i++) {
-		printf("buffer[i]: %c\n\r",buffer1[i]);
+		//printf("buffer[i]: %c\n\r",buffer1[i]);
 		if (buffer1[i]==':'){
 			if (flag_captura==0){
 				printf("Aqui\n\r");
