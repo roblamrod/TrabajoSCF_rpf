@@ -93,7 +93,7 @@ const osThreadAttr_t defaultTask_attributes = {
 osThreadId_t wifiStartHandle;
 const osThreadAttr_t wifiStart_attributes = {
   .name = "wifiStart",
-  .stack_size = 512 * 4,
+  .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for acel_task */
