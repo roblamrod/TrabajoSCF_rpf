@@ -93,7 +93,7 @@ const osThreadAttr_t defaultTask_attributes = {
 osThreadId_t wifiStartHandle;
 const osThreadAttr_t wifiStart_attributes = {
   .name = "wifiStart",
-  .stack_size = 1024 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for acel_task */
@@ -249,7 +249,6 @@ int wifi_get_http(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -329,7 +328,7 @@ int main(void)
 
   /* Create the queue(s) */
   /* creation of print_queue */
-  print_queueHandle = osMessageQueueNew (64, sizeof(uintptr_t), &print_queue_attributes);
+  print_queueHandle = osMessageQueueNew (128, sizeof(uintptr_t), &print_queue_attributes);
 
   /* creation of receive_queue */
   receive_queueHandle = osMessageQueueNew (3, sizeof(char), &receive_queue_attributes);
@@ -1197,6 +1196,8 @@ TransportStatus_t xNetworkStatus;
 float ftemp;
 float fhum;
 char payLoad[128];
+char string_print [128] = "";
+char * string_print_puntero = string_print;
  /* Attempt to connect to the MQTT broker. The socket is returned in
  * the network context structure. */
  xNetworkStatus = prvConnectToServer( &xNetworkContext );
@@ -1216,12 +1217,19 @@ char payLoad[128];
    fhum=BSP_HSENSOR_ReadHumidity();
 
    // Media de las aceleraciones
-
+   HAL_RTC_GetTime(&hrtc, &GetTime, RTC_FORMAT_BIN);
+   HAL_RTC_GetDate(&hrtc, &GetDate, RTC_FORMAT_BIN);
    if (acel_flag==1){
 	   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f, \"acel_x\":%d, \"acel_y\":%d, \"acel_z\":%d}",ftemp, fhum, acel_x,acel_y,acel_z);
+	   snprintf(string_print, 128, "%02u:%02u:%02u - %u/%u/20%02u\r\n - {\"temperatura\":%02.2f, \"humedad\":%02.2f} \n\r",GetTime.Hours,GetTime.Minutes,GetTime.Seconds,GetDate.Date,GetDate.Month,GetDate.Year,ftemp, fhum);
+	   osMessageQueuePut(print_queueHandle, &string_print_puntero, 0, pdMS_TO_TICKS(500));
+	   snprintf(string_print, 128, "%02u:%02u:%02u - %u/%u/20%02u\r\n - \"acel_x\":%d, \"acel_y\":%d, \"acel_z\":%d} \n\r",GetTime.Hours,GetTime.Minutes,GetTime.Seconds,GetDate.Date,GetDate.Month,GetDate.Year, acel_x,acel_y,acel_z);
+	   osMessageQueuePut(print_queueHandle, &string_print_puntero, 0, pdMS_TO_TICKS(500));
 	   acel_flag = 0;
    }
    else{
+	   snprintf(string_print, 128, "%02u:%02u:%02u - %u/%u/20%02u\r\n - {\"temperatura\":%02.2f, \"humedad\":%02.2f} \n\r",GetTime.Hours,GetTime.Minutes,GetTime.Seconds,GetDate.Date,GetDate.Month,GetDate.Year,ftemp, fhum);
+	   osMessageQueuePut(print_queueHandle, &string_print_puntero, 0, pdMS_TO_TICKS(500));
 	   sprintf(payLoad,"{\"temperatura\":%02.2f, \"humedad\":%02.2f}",ftemp, fhum);
    }
 
@@ -1327,7 +1335,7 @@ void acel_task_function(void *argument)
         }
 
 
-    	HAL_UART_Transmit(&huart1,(uint8_t *)timestamp,26,1000);		/* TransmisiÃ³n de la informaciÃ³n por UART */
+    	//HAL_UART_Transmit(&huart1,(uint8_t *)timestamp,26,1000);		/* TransmisiÃ³n de la informaciÃ³n por UART */
 
 
     	lista_acelx[contador] = pDataAcc[0];
@@ -1354,7 +1362,7 @@ void acel_task_function(void *argument)
         	temp_acel_x=0;
         	temp_acel_y=0;
         	temp_acel_z=0;
-        	printf("Modo operacion en main: %d. \n\r", modo_operacion);
+        	//printf("Modo operacion en main: %d. \n\r", modo_operacion);
         	if (modo_operacion == 1){
             	osDelay(pdMS_TO_TICKS(20000));//(20000));
         	}
@@ -1389,10 +1397,12 @@ void print_task_func(void *argument)
   for(;;)
   {
 	  estado = osMessageQueueGet(print_queueHandle, &rec, NULL, osWaitForever);
+	  //printf("estado: %d\n\r",estado);
 	  if (estado == osOK)
 		  HAL_UART_Transmit(&huart1, (uint8_t *)rec, strlen((const char *)rec), 10);
 	  else if (estado == osErrorTimeout)
 		  HAL_UART_Transmit(&huart1, (uint8_t *)cadto, strlen(cadto), 10);
+	  osDelay(1);
   }
   /* USER CODE END print_task_func */
 }
@@ -1483,69 +1493,70 @@ void wifi_set_func(void *argument)
 {
   /* USER CODE BEGIN wifi_set_func */
 	char recibido[31] = {0};
-	uint8_t ret_flag;
-	uint32_t flag_rec = 0x0000U;
-	uint8_t bandera_cola = 1;
-	osStatus_t estado;
-	char rec;
-	const char* msg_ssid_ok = "\r\nSSID cambiado\r\n";
-	const char* msg_clave_ok = "Clave cambiada\r\n";
-	const char* msg_error = "\r\nERROR: Valor no válido\r\n";
-	const char* msg_rtc1 = "\r\n\r\n========================\r\n" "| Configurar wifi |\r\n" "========================\r\n\r\n";
-	const char* msg[2] = {"SSID: ", "\r\nClave: "};
-	uint8_t contador_wifi = 0;
-  /* Infinite loop */
-  for(;;)
-  {
-	  ret_flag = osThreadFlagsWait(0x0001U, osFlagsWaitAny, osWaitForever);
-	  if (ret_flag == 1U) {
-		  restart_loop:
-		  HAL_UART_Transmit(&huart1, (uint8_t *)msg_rtc1, strlen(msg_rtc1), 10);
-		  for (int i = 0; i < 2; i++){
-			  HAL_UART_Transmit(&huart1, (uint8_t *)msg[i], strlen(msg[i]), 10);
-			  HAL_UART_Receive_IT(&huart1, &rec_data, sizeof(rec_data));
-			  flag_rec = osThreadFlagsWait(0x00000003U, osFlagsWaitAny, osWaitForever);
-			  if ( flag_rec == 0x0001U){
-				  printf("Salto de linea pulsado, bandera 0 recibida\r\n");
-				  while(bandera_cola) {
-					  estado = osMessageQueueGet(receive_wifi_queueHandle, &rec, NULL, pdMS_TO_TICKS(500));
-					  if (estado == osOK){
-						  if (rec == '\n' || rec == '\r') {
-							  recibido[contador_wifi] = '\0';
-							  bandera_cola = 0;
+		uint8_t ret_flag;
+		uint32_t flag_rec = 0x0000U;
+		uint8_t bandera_cola = 1;
+		osStatus_t estado;
+		char rec;
+		const char* msg_ssid_ok = "\r\nSSID cambiado\r\n";
+		const char* msg_clave_ok = "Clave cambiada\r\n";
+		const char* msg_error = "\r\nERROR: Valor no válido\r\n";
+		const char* msg_rtc1 = "\r\n\r\n========================\r\n" "| Configurar wifi |\r\n" "========================\r\n\r\n";
+		const char* msg[2] = {"SSID: ", "\r\nClave: "};
+		uint8_t contador_wifi = 0;
+	  /* Infinite loop */
+	  for(;;)
+	  {
+		  ret_flag = osThreadFlagsWait(0x0001U, osFlagsWaitAny, osWaitForever);
+		  if (ret_flag == 1U) {
+			  restart_loop:
+			  HAL_UART_Transmit(&huart1, (uint8_t *)msg_rtc1, strlen(msg_rtc1), 10);
+			  for (int i = 0; i < 2; i++){
+				  HAL_UART_Transmit(&huart1, (uint8_t *)msg[i], strlen(msg[i]), 10);
+				  HAL_UART_Receive_IT(&huart1, &rec_data, sizeof(rec_data));
+				  flag_rec = osThreadFlagsWait(0x00000003U, osFlagsWaitAny, osWaitForever);
+				  if ( flag_rec == 0x0001U){
+					  printf("Salto de linea pulsado, bandera 0 recibida\r\n");
+					  while(bandera_cola) {
+						  estado = osMessageQueueGet(receive_wifi_queueHandle, &rec, NULL, pdMS_TO_TICKS(500));
+						  if (estado == osOK){
+							  if (rec == '\n' || rec == '\r') {
+								  recibido[contador_wifi] = '\0';
+								  bandera_cola = 0;
+							  }
+							  else
+								  recibido[contador_wifi] = rec;
+							  contador_wifi++;
 						  }
-						  else
-							  recibido[contador_wifi] = rec;
-						  contador_wifi++;
 					  }
-				  }
-				  contador_wifi = 0;
-				  printf("recibido= %s\r\n",recibido);
-				  if (i==0)
-					  strcpy(SSID, recibido);
-				  else if (i==1)
-					  strcpy(PASSWORD, recibido);
-				  osMessageQueueReset(receive_wifi_queueHandle);
-				  bandera_cola = 1;
-				  for (int j=0;j<=31;j++){
-					  recibido[j]='\0';
-				  }
+					  contador_wifi = 0;
+					  printf("recibido= %s\r\n",recibido);
+					  if (i==0)
+						  strcpy(SSID, recibido);
+					  else if (i==1)
+						  strcpy(PASSWORD, recibido);
+					  osMessageQueueReset(receive_wifi_queueHandle);
+					  bandera_cola = 1;
+					  for (int j=0;j<=31;j++){
+						  recibido[j]='\0';
+					  }
 
-			  } else if (flag_rec == 0x0002U){
-				  HAL_UART_Transmit(&huart1, (uint8_t *)msg_error, strlen(msg_error), 10);
-				  osMessageQueueReset(receive_queueHandle);
-				  goto restart_loop;
+				  } else if (flag_rec == 0x0002U){
+					  HAL_UART_Transmit(&huart1, (uint8_t *)msg_error, strlen(msg_error), 10);
+					  osMessageQueueReset(receive_queueHandle);
+					  goto restart_loop;
+				  }
 			  }
-		  }
 
-		  printf("SSID: %s | PASSWORD: %s",SSID, PASSWORD);
-		  HAL_UART_Transmit(&huart1, (uint8_t *)msg_ssid_ok, strlen(msg_ssid_ok), 10);
-		  HAL_UART_Transmit(&huart1, (uint8_t *)msg_clave_ok, strlen(msg_clave_ok), 10);
-		  osThreadFlagsSet(wifiStartHandle, 0x0001U);
-		  bandera_cola = 0;
-		  osThreadSuspend(wifi_setHandle);
+			  printf("SSID: %s | PASSWORD: %s",SSID, PASSWORD);
+			  HAL_UART_Transmit(&huart1, (uint8_t *)msg_ssid_ok, strlen(msg_ssid_ok), 10);
+			  HAL_UART_Transmit(&huart1, (uint8_t *)msg_clave_ok, strlen(msg_clave_ok), 10);
+			  osThreadFlagsSet(wifiStartHandle, 0x0001U);
+			  bandera_cola = 0;
+			  osThreadSuspend(wifi_setHandle);
+		  }
 	  }
-  }
+  /* USER CODE END wifi_set_func */
 }
 
 /**

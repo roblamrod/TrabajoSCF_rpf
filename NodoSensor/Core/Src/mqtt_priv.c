@@ -230,7 +230,7 @@ int prvMQTTProcessIncomingPublish( MQTTPublishInfo_t *pxPublishInfo)
 	memcpy(buffer2,pxPublishInfo->pTopicName,min(127,pxPublishInfo->topicNameLength));
 	buffer2[min(1023,pxPublishInfo->topicNameLength)]='\0';
 
-	printf("Topic \"%s\": publicado \"%s\"\n",buffer2,buffer1);
+	//printf("Topic \"%s\": publicado \"%s\"\n",buffer2,buffer1);
 
 	char *key = "\"value\": ";
 	char *value = strstr(buffer1, key) + strlen(key);
@@ -239,14 +239,14 @@ int prvMQTTProcessIncomingPublish( MQTTPublishInfo_t *pxPublishInfo)
 	    end = strchr(value, '}');
 	}
 	char *result = strndup(value, end - value);
-	printf("The value of the key \"value\" is %s\n", result);
+	//printf("The value of the key \"value\" is %s\n", result);
 
   // Actuar localmente sobre los LEDs o alguna otra cosa
 	//if(buffer1[0]=='1') BSP_LED_On(LED2);
 	//if(buffer1[0]=='0') BSP_LED_Off(LED2);
 
 	resultado_int = atoi(result);
-	printf("Resultado entero: %d.\n\r",resultado_int);
+	//printf("Resultado entero: %d.\n\r",resultado_int);
 
 	return resultado_int;
 
@@ -278,22 +278,22 @@ void prvEventCallback( MQTTContext_t * pxMQTTContext,
     /* The MQTT context is not used for this demo. */
     ( void ) pxMQTTContext;
 
-    printf("Ha llegado un paquete MQTT. \n\r");
+    //printf("Ha llegado un paquete MQTT. \n\r");
     if( ( pxPacketInfo->type & 0xF0U ) == MQTT_PACKET_TYPE_PUBLISH )
     {
-        printf("Ha llegado un paquete tipo Publish. \n\r");
+        //printf("Ha llegado un paquete tipo Publish. \n\r");
     	// procesar un paquete PUBLISH recibido,
     	//por ejemplo llamando a la función prvMQTTProcessIncomingPublish, que hay que desarrollar
     	modo_operacion = prvMQTTProcessIncomingPublish( pxDeserializedInfo->pPublishInfo );
-    	printf("Modo op dentro de prvEventCallback: %d.\n\r",modo_operacion);
+    	//printf("Modo op dentro de prvEventCallback: %d.\n\r",modo_operacion);
     }
     else
     {
-        printf("Ha llegado un paquete que NO es tipo Publish. \n\r");
+        //printf("Ha llegado un paquete que NO es tipo Publish. \n\r");
     	modo_operacion = prvMQTTProcessIncomingPublish( pxDeserializedInfo->pPublishInfo );
        // también se podría hacer algo con otros paquetes si fuera necesario
     	 //prvMQTTProcessResponse( pxPacketInfo, pxDeserializedInfo->packetIdentifier );
-    	printf("Modo op dentro de prvEventCallback: %d.\n\r",modo_operacion);
+    	//printf("Modo op dentro de prvEventCallback: %d.\n\r",modo_operacion);
     }
 
 }
