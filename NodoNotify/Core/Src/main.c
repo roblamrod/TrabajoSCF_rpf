@@ -39,8 +39,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define SSID     "iPhone de Fernando" //"plutow"
-#define PASSWORD "garruchin9" //"abcdefgh"
+//#define SSID     "iPhone de Fernando" //"plutow"
+//#define PASSWORD "garruchin9" //"abcdefgh"
+char SSID [31];
+char PASSWORD [31];
 //#define WIFISECURITY WIFI_ECN_OPEN
 #define WIFISECURITY WIFI_ECN_WPA2_PSK
 
@@ -100,6 +102,42 @@ const osThreadAttr_t leds_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for print_task */
+osThreadId_t print_taskHandle;
+const osThreadAttr_t print_task_attributes = {
+  .name = "print_task",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for RTC_set */
+osThreadId_t RTC_setHandle;
+const osThreadAttr_t RTC_set_attributes = {
+  .name = "RTC_set",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityAboveNormal,
+};
+/* Definitions for wifi_set */
+osThreadId_t wifi_setHandle;
+const osThreadAttr_t wifi_set_attributes = {
+  .name = "wifi_set",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for print_queue */
+osMessageQueueId_t print_queueHandle;
+const osMessageQueueAttr_t print_queue_attributes = {
+  .name = "print_queue"
+};
+/* Definitions for receive_queue */
+osMessageQueueId_t receive_queueHandle;
+const osMessageQueueAttr_t receive_queue_attributes = {
+  .name = "receive_queue"
+};
+/* Definitions for receive_wifi_queue */
+osMessageQueueId_t receive_wifi_queueHandle;
+const osMessageQueueAttr_t receive_wifi_queue_attributes = {
+  .name = "receive_wifi_queue"
+};
 /* USER CODE BEGIN PV */
 extern  SPI_HandleTypeDef hspi;
 static  uint8_t  IP_Addr[4];
@@ -150,6 +188,9 @@ uint8_t drdyPulsedCfg = 0;
 uint8_t ctrlDrdy = 0;
 uint8_t ctrlMaster = 0;
 
+RTC_DateTypeDef GetDate; //Estructura para fijar/leer fecha
+RTC_TimeTypeDef GetTime; //Estructura para fijar/leer hora
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -166,6 +207,9 @@ static void MX_RTC_Init(void);
 void StartDefaultTask(void *argument);
 void wifiStartTask(void *argument);
 void leds_task(void *argument);
+void print_task_func(void *argument);
+void RTC_set_func(void *argument);
+void wifi_set_func(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -178,6 +222,10 @@ void  HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+uint8_t rec_data;
+uint8_t cont = 0;
+uint8_t config_state = 0;
+
 #if defined (TERMINAL_USE)
 #ifdef __GNUC__
 /* With GCC, small printf (option LD Linker->Libraries->Small printf
@@ -278,6 +326,16 @@ int main(void)
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
+  /* Create the queue(s) */
+  /* creation of print_queue */
+  print_queueHandle = osMessageQueueNew (64, sizeof(uintptr_t), &print_queue_attributes);
+
+  /* creation of receive_queue */
+  receive_queueHandle = osMessageQueueNew (3, sizeof(char), &receive_queue_attributes);
+
+  /* creation of receive_wifi_queue */
+  receive_wifi_queueHandle = osMessageQueueNew (31, sizeof(char), &receive_wifi_queue_attributes);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -291,6 +349,15 @@ int main(void)
 
   /* creation of leds */
   ledsHandle = osThreadNew(leds_task, NULL, &leds_attributes);
+
+  /* creation of print_task */
+  print_taskHandle = osThreadNew(print_task_func, NULL, &print_task_attributes);
+
+  /* creation of RTC_set */
+  RTC_setHandle = osThreadNew(RTC_set_func, NULL, &RTC_set_attributes);
+
+  /* creation of wifi_set */
+  wifi_setHandle = osThreadNew(wifi_set_func, NULL, &wifi_set_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -1030,6 +1097,65 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 }
 
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	char recibido = (char)rec_data;
+
+	if (config_state == 0) {
+		osStatus_t estado;
+		if (huart == &huart1)
+		{
+			printf("Recibido un caracter: %c\r\n", recibido);
+			cont++;
+			if (cont > 3){
+				osThreadFlagsSet(RTC_setHandle, 0x0002U);
+				cont = 0;
+			}else{
+				estado = osMessageQueuePut(receive_queueHandle,&recibido, 0, 0);
+				if (estado == osOK){
+					printf("Caracter anadido a la cola de recepcion\r\n");
+					if (recibido == '\n' || recibido == '\r'){
+						osThreadFlagsSet(RTC_setHandle, 0x0001U);
+						cont = 0;
+					}
+				}else if (estado == osErrorTimeout){
+					osThreadFlagsSet(RTC_setHandle, 0x0002U);
+				}else if (estado == osErrorParameter){
+					printf("OsErrorParameter\r\n");
+				}
+				HAL_UART_Receive_IT(&huart1, &rec_data, sizeof(rec_data));
+			}
+		}
+	}
+	else if (config_state==1) {
+		osStatus_t estado;
+		if (huart == &huart1)
+		{
+			printf("Recibido un caracter: %c\r\n", recibido);
+			cont++;
+			if (cont > 30){
+				osThreadFlagsSet(wifi_setHandle, 0x0002U);
+				cont = 0;
+			}else{
+				estado = osMessageQueuePut(receive_wifi_queueHandle,&recibido, 0, 0);
+				if (estado == osOK){
+					printf("Caracter anadido a la cola de recepcion\r\n");
+					if (recibido == '\n' || recibido == '\r'){
+						osThreadFlagsSet(wifi_setHandle, 0x0001U);
+						cont = 0;
+					}
+				}else if (estado == osErrorTimeout){
+					osThreadFlagsSet(wifi_setHandle, 0x0002U);
+				}else if (estado == osErrorParameter){
+					printf("OsErrorParameter\r\n");
+				}
+				HAL_UART_Receive_IT(&huart1, &rec_data, sizeof(rec_data));
+			}
+		}
+
+	}
+}
+
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -1121,12 +1247,20 @@ void SPI3_IRQHandler(void)
 void wifiStartTask(void *argument)
 {
   /* USER CODE BEGIN wifiStartTask */
+  uint8_t ret_flag;
+  uint8_t control = 1;
   /* Infinite loop */
-	wifi_connect();
-  for(;;)
-  {
-	MQTTTask();
-    osDelay(1);
+  while (control) {
+	  ret_flag = osThreadFlagsWait(0x0001U, osFlagsWaitAny, osWaitForever);
+	  if (ret_flag == 1U) {
+		  control = 0;
+		  wifi_connect();
+		  for(;;)
+		  {
+			MQTTTask();
+			osDelay(1);
+		  }
+	  }
   }
   /* USER CODE END wifiStartTask */
 }
@@ -1169,6 +1303,184 @@ void leds_task(void *argument)
     osDelay(1);
   }
   /* USER CODE END leds_task */
+}
+
+/* USER CODE BEGIN Header_print_task_func */
+/**
+* @brief Function implementing the print_task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_print_task_func */
+void print_task_func(void *argument)
+{
+  /* USER CODE BEGIN print_task_func */
+	uintptr_t rec;
+	osStatus_t estado;
+	const char *cadto = "Timeout agotado recepcion\r\n";
+
+  /* Infinite loop */
+  for(;;)
+  {
+	  estado = osMessageQueueGet(print_queueHandle, &rec, NULL, osWaitForever);
+	  if (estado == osOK)
+		  HAL_UART_Transmit(&huart1, (uint8_t *)rec, strlen((const char *)rec), 10);
+	  else if (estado == osErrorTimeout)
+		  HAL_UART_Transmit(&huart1, (uint8_t *)cadto, strlen(cadto), 10);
+  }
+  /* USER CODE END print_task_func */
+}
+
+/* USER CODE BEGIN Header_RTC_set_func */
+/**
+* @brief Function implementing the RTC_set thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_RTC_set_func */
+void RTC_set_func(void *argument)
+{
+  /* USER CODE BEGIN RTC_set_func */
+	char recibido[3] = {0};
+	uint32_t flag_rec = 0x0000U;
+	osStatus_t estado;
+	char rec;
+	const char* msg_hora_ok = "\r\nHora cambiada correctamente\r\n";
+	const char* msg_fecha_ok = "Fecha cambiada correctamente\r\n";
+	const char* msg_error = "\r\nERROR: Valor no válido\r\n";
+	const char* msg_rtc1 = "\r\n\r\n========================\r\n" "| Configurar rtc |\r\n" "========================\r\n\r\n";
+	const char* msg[6] = {
+	"Hora (0-23): ", "\r\nMinuto (0-59): ","\r\nSegundo (0-59): ","\r\nDía (1-31): ","\r\nMes (1-12): ",
+	"\r\nAño (0-99): "};
+	uint8_t limit[6][2] = {{0,23},{0,59},{0,59},{1,31},{1,12},{0,99}};
+	RTC_TimeTypeDef sTime = {0};
+	RTC_DateTypeDef sDate = {0};
+	uint8_t *toChange[6] = {&sTime.Hours, &sTime.Minutes, &sTime.Seconds, &sDate.Date,
+	&sDate.Month, &sDate.Year};
+
+  /* Infinite loop */
+  for(;;)
+  {
+	  restart_loop:
+	  HAL_UART_Transmit(&huart1, (uint8_t *)msg_rtc1, strlen(msg_rtc1), 10);
+	  for (int i = 0; i < 6; i++){
+		  HAL_UART_Transmit(&huart1, (uint8_t *)msg[i], strlen(msg[i]), 10);
+		  HAL_UART_Receive_IT(&huart1, &rec_data, sizeof(rec_data));
+		  flag_rec = osThreadFlagsWait(0x00000003U, osFlagsWaitAny, osWaitForever);
+		  if ( flag_rec == 0x0001U){
+			  printf("Salto de linea pulsado, bandera 0 recibida\r\n");
+			  for (int i = 0; i<3;i++){
+				  estado = osMessageQueueGet(receive_queueHandle, &rec, NULL, pdMS_TO_TICKS(500));
+				  if (estado == osOK){
+					  if (i == 2)
+						  recibido[i] = '\0';
+					  else
+						  recibido[i] = rec;
+				  }
+			  }
+			  if (((uint8_t)strtol(recibido, NULL, 10) > limit[i][1]) || ((uint8_t)strtol(recibido, NULL, 10) < limit[i][0])){
+				  HAL_UART_Transmit(&huart1, (uint8_t *)msg_error, strlen(msg_error), 10);
+				  osMessageQueueReset(receive_queueHandle);
+				  strcpy(recibido, "\0\0\0");
+				  goto restart_loop;
+			  }
+			  printf("recibido= %s\r\n",recibido);
+			  *toChange[i] = strtol(recibido, NULL, 16);
+			  osMessageQueueReset(receive_queueHandle);
+			  strcpy(recibido, "\0\0\0");
+
+		  } else if (flag_rec == 0x0002U){
+			  HAL_UART_Transmit(&huart1, (uint8_t *)msg_error, strlen(msg_error), 10);
+			  osMessageQueueReset(receive_queueHandle);
+			  goto restart_loop;
+		  }
+	  }
+	  HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
+	  HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD);
+	  HAL_UART_Transmit(&huart1, (uint8_t *)msg_hora_ok, strlen(msg_hora_ok), 10);
+	  HAL_UART_Transmit(&huart1, (uint8_t *)msg_fecha_ok, strlen(msg_fecha_ok), 10);
+	  osThreadFlagsSet(wifi_setHandle, 0x0001U);
+	  config_state=1; // Para que en la funcion HAL_UART_RxCpltCallback se encargue de configurar el wifi en vez de RTC
+	  osThreadSuspend(RTC_setHandle);
+  }
+  /* USER CODE END RTC_set_func */
+}
+
+/* USER CODE BEGIN Header_wifi_set_func */
+/**
+* @brief Function implementing the wifi_set thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_wifi_set_func */
+void wifi_set_func(void *argument)
+{
+  /* USER CODE BEGIN wifi_set_func */
+	char recibido[31] = {0};
+	uint8_t ret_flag;
+	uint32_t flag_rec = 0x0000U;
+	uint8_t bandera_cola = 1;
+	osStatus_t estado;
+	char rec;
+	const char* msg_ssid_ok = "\r\nSSID cambiado\r\n";
+	const char* msg_clave_ok = "Clave cambiada\r\n";
+	const char* msg_error = "\r\nERROR: Valor no válido\r\n";
+	const char* msg_rtc1 = "\r\n\r\n========================\r\n" "| Configurar wifi |\r\n" "========================\r\n\r\n";
+	const char* msg[2] = {"SSID: ", "\r\nClave: "};
+	uint8_t contador_wifi = 0;
+  /* Infinite loop */
+  for(;;)
+  {
+      ret_flag = osThreadFlagsWait(0x0001U, osFlagsWaitAny, osWaitForever);
+      if (ret_flag == 1U) {
+		  restart_loop:
+		  HAL_UART_Transmit(&huart1, (uint8_t *)msg_rtc1, strlen(msg_rtc1), 10);
+		  for (int i = 0; i < 2; i++){
+			  HAL_UART_Transmit(&huart1, (uint8_t *)msg[i], strlen(msg[i]), 10);
+			  HAL_UART_Receive_IT(&huart1, &rec_data, sizeof(rec_data));
+			  flag_rec = osThreadFlagsWait(0x00000003U, osFlagsWaitAny, osWaitForever);
+			  if ( flag_rec == 0x0001U){
+				  printf("Salto de linea pulsado, bandera 0 recibida\r\n");
+				  while(bandera_cola) {
+					  estado = osMessageQueueGet(receive_wifi_queueHandle, &rec, NULL, pdMS_TO_TICKS(500));
+					  if (estado == osOK){
+						  if (rec == '\n' || rec == '\r') {
+							  recibido[contador_wifi] = '\0';
+							  bandera_cola = 0;
+						  }
+						  else
+							  recibido[contador_wifi] = rec;
+						  contador_wifi++;
+					  }
+				  }
+				  contador_wifi = 0;
+				  printf("recibido= %s\r\n",recibido);
+				  if (i==0)
+					  strcpy(SSID, recibido);
+				  else if (i==1)
+					  strcpy(PASSWORD, recibido);
+				  osMessageQueueReset(receive_wifi_queueHandle);
+				  bandera_cola = 1;
+				  for (int j=0;j<=31;j++){
+					  recibido[j]='\0';
+				  }
+
+			  } else if (flag_rec == 0x0002U){
+				  HAL_UART_Transmit(&huart1, (uint8_t *)msg_error, strlen(msg_error), 10);
+				  osMessageQueueReset(receive_queueHandle);
+				  goto restart_loop;
+			  }
+		  }
+
+		  printf("SSID: %s | PASSWORD: %s",SSID, PASSWORD);
+		  HAL_UART_Transmit(&huart1, (uint8_t *)msg_ssid_ok, strlen(msg_ssid_ok), 10);
+		  HAL_UART_Transmit(&huart1, (uint8_t *)msg_clave_ok, strlen(msg_clave_ok), 10);
+		  osThreadFlagsSet(wifiStartHandle, 0x0001U);
+		  bandera_cola = 0;
+		  osThreadSuspend(wifi_setHandle);
+      }
+  }
+  /* USER CODE END wifi_set_func */
 }
 
 /**
